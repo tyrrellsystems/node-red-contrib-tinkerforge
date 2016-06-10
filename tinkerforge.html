@@ -1,0 +1,297 @@
+<script type="text/x-red" data-template-name="TinkerForgeConfig">
+	<div class="form-row">
+		<label for="node-config-input-hostname"><i class="fa "></i> Hostname</label>
+		<input type="text" id="node-config-input-hostname" placeholder="127.0.0.1">
+	</div>
+	<div class="form-row">
+		<label for="node-config-input-port"><i class="fa "></i> Port</label>
+		<input type="text" id="node-config-input-port">
+	</div>
+	<div class="form-row">
+		<label for="node-config-input-name"><i class="fa "></i> Name</label>
+		<input type="text" id="node-config-input-name">
+	</div>
+</script>
+
+<script type="text/javascript">
+	RED.nodes.registerType("TinkerForgeConfig",{
+		category: 'config',
+		defaults: {
+			hostname: {required: true},
+			port: {value: 4223, required: true},
+			name: {}
+		},
+		label: function() {
+			return this.name || this.hostname + ":" + this.port;
+		},
+		oneditsave: function() {
+
+			var hostname = $('#node-config-input-hostname').val();
+			var port = $('#node-config-input-port').val();
+			var dev = {
+				id: this.id,
+				host: hostname,
+				port: port
+			};
+			$.post('TinkerForge/device',dev);
+		}
+	});
+</script>
+
+<script type="text/x-red" data-template-name="TinkerForge Motion">
+	<div class="form-row">
+        <label for="node-input-device"><i class="fa fa-tasks"></i> Device</label>
+        <input type="text" id="node-input-device">
+    </div>
+    <div class="form-row">
+    	<label for="node-input-sensor"><i class="fa"></i> Sensor</label>
+    	<select size="4" id="node-input-sensor"></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> Topic</label>
+        <input type="text" id="node-input-topic" placeholder="Topic">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tasks"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Humidity">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="TinkerForge Motion">
+</script>
+
+<script type="text/javascript">
+	RED.nodes.registerType("TinkerForge Motion",{
+		category: 'TinkerForge',
+		defaults: {
+			device: {type: "TinkerForgeConfig", required: true},
+			sensor: {required: true},
+			//sensor: {type: "TinkerForgeSensor", required: true},
+			name: {},
+			topic: {}
+		},
+		outputs: 1,
+		inputs: 0,
+		label: function() {
+			return this.name || "TinkerForge Motion";
+		},
+		color: 'blue',
+		oneditprepare: function() {
+			var node = this;
+
+			if (node.device) {
+				var key = $('#node-input-device').val();
+				$.getJSON('TinkerForge/' + key +"/sensors/" + 233, function(data){
+					$('#node-input-sensor').find('option').remove().end();
+					for (d in data) {
+							$('<option/>',{
+								value: data[d].uid,
+								text: data[d].uid + " - " + data[d].typeName
+							}).appendTo('#node-input-sensor');
+						}
+				});
+			} else {
+				console.log("no device");
+			}
+
+			$('#node-input-device').change(function(){
+				var dev = $('#node-input-device').val();
+				if (dev) {
+					var key = dev;
+					$.getJSON('TinkerForge/' + key +"/sensors/" + 233, function(data){
+						$('#node-input-sensor').find('option').remove().end();
+						for (d in data) {
+							$('<option/>',{
+								value: data[d].uid,
+								text: data[d].uid + " - " + data[d].typeName
+							}).appendTo('#node-input-sensor');
+						}
+					});
+				} else {
+					console.log("no device");
+				}
+			});
+
+			if (node.sensor) {
+				$('#node-input-sensor').val(node.sensor);
+			}
+		}
+	});
+</script>
+
+<script type="text/x-red" data-template-name="TinkerForge Humidity">
+	<div class="form-row">
+        <label for="node-input-device"><i class="fa fa-tasks"></i> Device</label>
+        <input type="text" id="node-input-device" >
+    </div>
+    <div class="form-row">
+    	<label for="node-input-sensor"><i class="fa"></i> Sensor</label>
+    	<select size="4" id="node-input-sensor"></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-pollTime"><i class="fa fa-tasks"></i> Poll Interval</label>
+        <input type="number" id="node-input-pollTime" >
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> Topic</label>
+        <input type="text" id="node-input-topic" placeholder="Topic">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tasks"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Humidity">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="TinkerForge Humidity">
+</script>
+
+<script type="text/javascript">
+	RED.nodes.registerType("TinkerForge Humidity",{
+		category: 'TinkerForge',
+		defaults: {
+			device: {type: "TinkerForgeConfig", required: true},
+			sensor: {required: true},
+			pollTime: {value: "10", required: true},
+			//sensor: {type: "TinkerForgeSensor", requried: true},
+			name: {},
+			topic: {}
+		},
+		outputs: 1,
+		inputs: 0,
+		label: function() {
+			return this.name || "TinkerForge Humidity";
+		},
+		color: 'blue',
+		oneditprepare: function() {
+			var node = this;
+
+			if (node.device) {
+				var key = $('#node-input-device').val();
+				$.getJSON('TinkerForge/' + key +"/sensors/" + 27, function(data){
+					$('#node-input-sensor').find('option').remove().end();
+					for (d in data) {
+							$('<option/>',{
+								value: data[d].uid,
+								text: data[d].uid + " - " + data[d].typeName
+							}).appendTo('#node-input-sensor');
+						}
+				});
+			} else {
+				console.log("no device");
+			}
+
+			$('#node-input-device').change(function(){
+				var dev = $('#node-input-device').val();
+				if (dev) {
+					var key = dev;
+					$.getJSON('TinkerForge/' + key +"/sensors/" + 27, function(data){
+						$('#node-input-sensor').find('option').remove().end();
+						for (d in data) {
+							$('<option/>',{
+								value: data[d].uid,
+								text: data[d].uid + " - " + data[d].typeName
+							}).appendTo('#node-input-sensor');
+						}
+					});
+				} else {
+					console.log("no device");
+				}
+			});
+
+			if (node.sensor) {
+				$('#node-input-sensor').val(node.sensor);
+			}
+		}
+	});
+</script>
+
+<script type="text/x-red" data-template-name="TinkerForge Temperature">
+	<div class="form-row">
+        <label for="node-input-device"><i class="fa fa-tasks"></i> Device</label>
+        <input type="text" id="node-input-device" >
+    </div>
+    <div class="form-row">
+    	<label for="node-input-sensor"><i class="fa"></i> Sensor</label>
+    	<select size="4" id="node-input-sensor"></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-pollTime"><i class="fa fa-tasks"></i> Poll Interval</label>
+        <input type="number" id="node-input-pollTime" >
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> Topic</label>
+        <input type="text" id="node-input-topic" placeholder="Topic">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tasks"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Temperature">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="TinkerForge Temperature">
+</script>
+
+<script type="text/javascript">
+	RED.nodes.registerType("TinkerForge Temperature",{
+		category: 'TinkerForge',
+		defaults: {
+			device: {type: "TinkerForgeConfig", required: true},
+			sensor: {required: true},
+			pollTime: {value: "10", required: true},
+			//sensor: {type: "TinkerForgeSensor", requried: true},
+			name: {},
+			topic: {}
+		},
+		outputs: 1,
+		inputs: 0,
+		label: function() {
+			return this.name || "TinkerForge Temperature";
+		},
+		color: 'blue',
+		oneditprepare: function() {
+			var node = this;
+
+			if (node.device) {
+				var key = $('#node-input-device').val();
+				$.getJSON('TinkerForge/' + key +"/sensors/" + 226, function(data){
+					$('#node-input-sensor').find('option').remove().end();
+					for (var d=0; d<data.length; d++) {
+						$('<option/>',{
+							value: data[d].uid,
+							text: data[d].uid + " - " + data[d].typeName
+						}).appendTo('#node-input-sensor');
+					}
+
+					if (node.sensor) {
+						$('#node-input-sensor').val(node.sensor);
+					}
+				});
+			} else {
+				console.log("no device");
+			}
+
+			$('#node-input-device').change(function(){
+				var dev = $('#node-input-device').val();
+				if (dev) {
+					var key = dev;
+					$.getJSON('TinkerForge/' + key +"/sensors/" + 226, function(data){
+						$('#node-input-sensor').find('option').remove().end();
+						for (var d=0; d<data.length; d++) {
+							$('<option/>',{
+								value: data[d].uid,
+								text: data[d].uid + " - " + data[d].typeName
+							}).appendTo('#node-input-sensor');
+						}
+
+					});
+				} else {
+					console.log("no device");
+				}
+			});
+
+			if (node.sensor) {
+				$('#node-input-sensor').val(node.sensor);
+			}
+		}
+	});
+</script>
