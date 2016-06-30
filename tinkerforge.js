@@ -18,6 +18,7 @@ function newDevice(host, port, id) {
     };
 
     devices[id] = dev;
+    ipcon.setAutoReconnect(true);
     ipcon.connect(host, port,
         function(error) {
             console.log('Error: ' + error);
@@ -57,8 +58,9 @@ module.exports = function(RED){
         this.name = n.host + ":" + n.port;
         this.id = n.id;
 
-
         var node = this;
+
+        console.log(this.host + " - " + n.host);
 
         if (devices[node.name]) {
             //already exists?
@@ -80,7 +82,8 @@ module.exports = function(RED){
 
         node.ipcon = devices[this.device].ipcon;
 
-        var md = new Tinkerforge.BrickletMotionDetector(node.sensor, node.ipcon);
+        node.md = new Tinkerforge.BrickletMotionDetector(node.sensor, node.ipcon);
+        
 
         var detected = function () {
             node.send({
@@ -89,7 +92,7 @@ module.exports = function(RED){
             });
         }
 
-        md.on(Tinkerforge.BrickletMotionDetector.CALLBACK_MOTION_DETECTED,
+        node.md.on(Tinkerforge.BrickletMotionDetector.CALLBACK_MOTION_DETECTED,
             detected
         );
 
@@ -101,13 +104,12 @@ module.exports = function(RED){
         }
 
         // Register detection cycle ended callback
-        md.on(Tinkerforge.BrickletMotionDetector.CALLBACK_DETECTION_CYCLE_ENDED,
+        node.md.on(Tinkerforge.BrickletMotionDetector.CALLBACK_DETECTION_CYCLE_ENDED,
             ended
         );
 
         node.on('close',function() {
-            md.removeListener(Tinkerforge.BrickletMotionDetector.CALLBACK_MOTION_DETECTED, detected);
-            md.removeListener(Tinkerforge.BrickletMotionDetector.CALLBACK_DETECTION_CYCLE_ENDED, ended);
+            node.ipcon.disconnect();
         });
     }
 
@@ -124,10 +126,10 @@ module.exports = function(RED){
         var node = this;
 
         node.ipcon = devices[this.device].ipcon;
-        var h = new Tinkerforge.BrickletHumidity(node.sensor, node.ipcon);
+        node.h = new Tinkerforge.BrickletHumidity(node.sensor, node.ipcon);
 
         setInterval(function(){
-            h.getHumidity(function(humidity) {
+            node.h.getHumidity(function(humidity) {
                 node.send({
                     topic: node.topic || 'humidity',
                     payload: humidity/10.0
@@ -138,9 +140,47 @@ module.exports = function(RED){
                 node.error(err);
             });
         },(node.pollTime * 1000));
+
+        node.on('close',function() {
+            node.ipcon.disconnect();
+        });
     }
 
     RED.nodes.registerType('TinkerForge Humidity', tinkerForgeHumidity);
+
+    function tinkerForgePTC(n) {
+        RED.nodes.createNode(this,n);
+        this.device = n.device;
+        this.sensor = n.sensor;
+        this.name = n.name;
+        this.topic = n.topic;
+        this.pollTime = n.pollTime;
+        var node = this;
+
+        node.ipcon = devices[this.device].ipcon;
+
+        node.t = new Tinkerforge.BrickletPTC(node.sensor, node.ipcon);
+
+        setInterval(function(){
+            node.t.getTemperature(function(temp) {
+                node.send({
+                    topic: node.topic || 'temperature',
+                    payload: temp/100.0
+                })
+            },
+            function(err) {
+                //error
+                node.error(err);
+            });
+        },(node.pollTime * 1000));
+
+        node.on('close',function() {
+            node.ipcon.disconnect();
+        });
+        
+    }
+
+    RED.nodes.registerType('TinkerForge PTC', tinkerForgePTC);
 
     function tinkerForgeTemperature(n) {
         RED.nodes.createNode(this,n);
@@ -152,6 +192,25 @@ module.exports = function(RED){
         var node = this;
 
         node.ipcon = devices[this.device].ipcon;
+
+        node.t = new Tinkerforge.BrickletTemperature(node.sensor, node.ipcon);
+
+        setInterval(function(){
+            node.t.getTemperature(function(temp) {
+                node.send({
+                    topic: node.topic || 'temperature',
+                    payload: temp/100.0
+                })
+            },
+            function(err) {
+                //error
+                node.error(err);
+            });
+        },(node.pollTime * 1000));
+
+        node.on('close',function() {
+            node.ipcon.disconnect();
+        });
         
     }
 
@@ -167,6 +226,7 @@ module.exports = function(RED){
 
     RED.httpAdmin.get('/TinkerForge/:device/sensors/:type', function(req,res){
         var dev = devices[req.params.device];
+        console.log(dev + " - - " + req.params.device);
         if (dev) {
             var sensors = [];
             for (var s in dev.sensors) {
@@ -176,6 +236,7 @@ module.exports = function(RED){
                     }
                 }
             }
+            console.log(sensors);
             res.send(sensors);
         } else {
             res.status(404).end();
