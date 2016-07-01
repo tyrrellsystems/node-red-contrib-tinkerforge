@@ -216,6 +216,63 @@ module.exports = function(RED){
 
     RED.nodes.registerType('TinkerForge Temperature', tinkerForgeTemperature);
 
+    function tinkerForgeDigitalIn(n) {
+        RED.nodes.createNode(this,n);
+
+        this.device = n.device;
+        this.sensor = n.sensor;
+        this.name = n.name;
+        this.topic = n.topic;
+        var node = this;
+
+        node.currentState = 0;
+
+        node.ipcon = devices[this.device].ipcon;
+
+        node.idi4 = new Tinkerforge.BrickletIndustrialDigitalIn4(node.sensor, node.ipcon);
+        //((1 << 0) + (1 << 1) + (1 << 2) + (1 << 3))
+        node.idi4.setInterrupt(15);
+
+        node.idi4.on(Tinkerforge.BrickletIndustrialDigitalIn4.CALLBACK_INTERUPT, 
+            function(interupMask, valueMask){
+                if ((valueMask & 1) !== (currentState & 1)) {
+                    node.send({
+                        topic: node.topic + "/0",
+                        payload: (valueMask & 1)
+                    });
+                }
+
+                if ((valueMask & 2) !== (currentState & 1)) {
+                    node.send({
+                        topic: node.topic + "/2",
+                        payload: (valueMask & 2)
+                    });
+                }
+
+                if ((valueMask & 4) !== (currentState & 4)) {
+                    node.send({
+                        topic: node.topic + "/2",
+                        payload: (valueMask & 4)
+                    });
+                }
+
+                if ((valueMask & 8) !== (currentState & 8)) {
+                    node.send({
+                        topic: node.topic + "/3",
+                        payload: (valueMask & 8)
+                    });
+                }
+                node.currentState = valueMask;
+        });
+on
+        node.on('close',function() {
+            node.ipcon.disconnect();
+        });
+
+    }
+
+    RED.nodes.registerType('TinkerForge DigitalIn', tinkerForgeDigitalIn);
+
     RED.httpAdmin.use('/TinkerForge/device',bodyParser.json());
 
     RED.httpAdmin.post('/TinkerForge/device', function(req,res){
@@ -226,7 +283,7 @@ module.exports = function(RED){
 
     RED.httpAdmin.get('/TinkerForge/:device/sensors/:type', function(req,res){
         var dev = devices[req.params.device];
-        console.log(dev + " - - " + req.params.device);
+        //console.log(dev + " - - " + req.params.device);
         if (dev) {
             var sensors = [];
             for (var s in dev.sensors) {
@@ -236,7 +293,7 @@ module.exports = function(RED){
                     }
                 }
             }
-            console.log(sensors);
+            //console.log(sensors);
             res.send(sensors);
         } else {
             res.status(404).end();
