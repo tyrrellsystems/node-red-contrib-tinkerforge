@@ -463,3 +463,90 @@
 		}
 	});
 </script>
+
+<script type="text/x-red" data-template-name="TinkerForge AmbientLight">
+	<div class="form-row">
+        <label for="node-input-device"><i class="fa fa-tasks"></i> Device</label>
+        <input type="text" id="node-input-device" >
+    </div>
+    <div class="form-row">
+    	<label for="node-input-sensor"><i class="fa"></i> Sensor</label>
+    	<select size="4" id="node-input-sensor"></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-pollTime"><i class="fa fa-tasks"></i> Poll Interval</label>
+        <input type="number" id="node-input-pollTime" >
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> Topic</label>
+        <input type="text" id="node-input-topic" placeholder="Topic">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tasks"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="AmbientLight">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="TinkerForge AmbientLight">
+</script>
+
+<script type="text/javascript">
+	RED.nodes.registerType("TinkerForge AmbientLight",{
+		category: 'TinkerForge',
+		defaults: {
+			device: {type: "TinkerForgeConfig", required: true},
+			sensor: {required: true},
+			pollTime: {value: "10", required: true},
+			//sensor: {type: "TinkerForgeSensor", requried: true},
+			name: {},
+			topic: {}
+		},
+		outputs: 1,
+		inputs: 0,
+		label: function() {
+			return this.name || "TinkerForge AmbientLight";
+		},
+		color: 'gray',
+		icon: 'tf.png',
+		oneditprepare: function() {
+			var node = this;
+
+			if (node.device) {
+				var key = $('#node-input-device').val();
+				$.getJSON('TinkerForge/' + key +"/sensors/" + 259, function(data){
+					$('#node-input-sensor').find('option').remove().end();
+					for (d in data) {
+							$('<option/>',{
+								value: data[d].uid,
+								text: data[d].uid + " - " + data[d].typeName
+							}).appendTo('#node-input-sensor');
+						}
+				});
+			} else {
+				console.log("no device");
+			}
+
+			$('#node-input-device').change(function(){
+				var dev = $('#node-input-device').val();
+				if (dev) {
+					var key = dev;
+					$.getJSON('TinkerForge/' + key +"/sensors/" + 259, function(data){
+						$('#node-input-sensor').find('option').remove().end();
+						for (d in data) {
+							$('<option/>',{
+								value: data[d].uid,
+								text: data[d].uid + " - " + data[d].typeName
+							}).appendTo('#node-input-sensor');
+						}
+					});
+				} else {
+					console.log("no device");
+				}
+			});
+
+			if (node.sensor) {
+				$('#node-input-sensor').val(node.sensor);
+			}
+		}
+	});
+</script>

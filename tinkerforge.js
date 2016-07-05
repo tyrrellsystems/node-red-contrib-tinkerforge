@@ -266,7 +266,7 @@ module.exports = function(RED){
                 }
                 node.currentState = valueMask;
         });
-on
+
         node.on('close',function() {
             node.ipcon.disconnect();
         });
@@ -274,6 +274,40 @@ on
     }
 
     RED.nodes.registerType('TinkerForge Digital-In', tinkerForgeDigitalIn);
+
+    function tinkerForgeAmbientLight(n) {
+        RED.nodes.createNode(this,n);
+
+        this.device = n.device;
+        this.sensor = n.sensor;
+        this.name = n.name;
+        this.topic = n.topic;
+        this.pollTime = n.pollTime;
+        var node = this;
+
+        node.ipcon = devices[this.device].ipcon;
+        node.al = new Tinkerforge.BrickletAmbientLightV2(node.sensor, node.ipcon);
+
+        node.interval = setInterval(function(){
+            node.al.getIlluminance(function(lux) {
+                node.send({
+                    topic: node.topic || 'light',
+                    payload: lux/100.0
+                })
+            },
+            function(err) {
+                //error
+                node.error(err);
+            });
+        },(node.pollTime * 1000));
+
+        node.on('close',function() {
+            clearInterval(node.interval);
+            node.ipcon.disconnect();
+        });
+    };
+
+    RED.nodes.registerType('TinkerForge AmbientLight', tinkerForgeAmbientLight);
 
     RED.httpAdmin.use('/TinkerForge/device',bodyParser.json());
 
