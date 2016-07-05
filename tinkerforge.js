@@ -60,8 +60,6 @@ module.exports = function(RED){
 
         var node = this;
 
-        console.log(this.host + " - " + n.host);
-
         if (devices[node.name]) {
             //already exists?
         } else {
@@ -137,7 +135,9 @@ module.exports = function(RED){
             },
             function(err) {
                 //error
-                node.error(err);
+                if (err == 31) {
+                    node.error("Not connected");
+                }
             });
         },(node.pollTime * 1000));
 
@@ -161,7 +161,7 @@ module.exports = function(RED){
 
         node.t = new Tinkerforge.BrickletPTC(node.sensor, node.ipcon);
 
-        setInterval(function(){
+        node.interval = setInterval(function(){
             node.t.getTemperature(function(temp) {
                 node.send({
                     topic: node.topic || 'temperature',
@@ -175,6 +175,7 @@ module.exports = function(RED){
         },(node.pollTime * 1000));
 
         node.on('close',function() {
+            clearInterval(node.interval);
             node.ipcon.disconnect();
         });
         
@@ -195,7 +196,7 @@ module.exports = function(RED){
 
         node.t = new Tinkerforge.BrickletTemperature(node.sensor, node.ipcon);
 
-        setInterval(function(){
+        node.interval = setInterval(function(){
             node.t.getTemperature(function(temp) {
                 node.send({
                     topic: node.topic || 'temperature',
@@ -209,6 +210,7 @@ module.exports = function(RED){
         },(node.pollTime * 1000));
 
         node.on('close',function() {
+            clearInterval(node.interval);
             node.ipcon.disconnect();
         });
         
@@ -238,28 +240,28 @@ module.exports = function(RED){
                 if ((valueMask & 1) !== (currentState & 1)) {
                     node.send({
                         topic: node.topic + "/0",
-                        payload: (valueMask & 1)
+                        payload: (valueMask & 1)  != 0
                     });
                 }
 
                 if ((valueMask & 2) !== (currentState & 1)) {
                     node.send({
                         topic: node.topic + "/2",
-                        payload: (valueMask & 2)
+                        payload: (valueMask & 2) != 0
                     });
                 }
 
                 if ((valueMask & 4) !== (currentState & 4)) {
                     node.send({
                         topic: node.topic + "/2",
-                        payload: (valueMask & 4)
+                        payload: (valueMask & 4) != 0
                     });
                 }
 
                 if ((valueMask & 8) !== (currentState & 8)) {
                     node.send({
                         topic: node.topic + "/3",
-                        payload: (valueMask & 8)
+                        payload: (valueMask & 8) != 0
                     });
                 }
                 node.currentState = valueMask;
@@ -271,7 +273,7 @@ on
 
     }
 
-    RED.nodes.registerType('TinkerForge DigitalIn', tinkerForgeDigitalIn);
+    RED.nodes.registerType('TinkerForge Digital-In', tinkerForgeDigitalIn);
 
     RED.httpAdmin.use('/TinkerForge/device',bodyParser.json());
 
