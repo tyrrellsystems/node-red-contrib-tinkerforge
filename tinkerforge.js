@@ -205,7 +205,7 @@ module.exports = function(RED){
             },
             function(err) {
                 //error
-                node.error(err);
+                node.error("PTC - " + err);
             });
         },(node.pollTime * 1000));
 
@@ -233,32 +233,35 @@ module.exports = function(RED){
 
         node.idi4 = new Tinkerforge.BrickletIndustrialDigitalIn4(node.sensor, node.ipcon);
         //((1 << 0) + (1 << 1) + (1 << 2) + (1 << 3))
-        node.idi4.setInterrupt(15);
+        node.idi4.setInterrupt( 15);
 
-        node.idi4.on(Tinkerforge.BrickletIndustrialDigitalIn4.CALLBACK_INTERUPT, 
+        node.idi4.on(Tinkerforge.BrickletIndustrialDigitalIn4.CALLBACK_INTERRUPT, 
             function(interupMask, valueMask){
-                if ((valueMask & 1) !== (currentState & 1)) {
+                // console.log("int mask - " + interupMask.toString(2));
+                // console.log("val mask - " + valueMask.toString(2));
+
+                if ((valueMask & 1) !== (node.currentState & 1)) {
                     node.send({
                         topic: node.topic + "/0",
                         payload: (valueMask & 1)  != 0
                     });
                 }
 
-                if ((valueMask & 2) !== (currentState & 1)) {
+                if ((valueMask & 2) !== (node.currentState & 2)) {
                     node.send({
-                        topic: node.topic + "/2",
+                        topic: node.topic + "/1",
                         payload: (valueMask & 2) != 0
                     });
                 }
 
-                if ((valueMask & 4) !== (currentState & 4)) {
+                if ((valueMask & 4) !== (node.currentState & 4)) {
                     node.send({
                         topic: node.topic + "/2",
                         payload: (valueMask & 4) != 0
                     });
                 }
 
-                if ((valueMask & 8) !== (currentState & 8)) {
+                if ((valueMask & 8) !== (node.currentState & 8)) {
                     node.send({
                         topic: node.topic + "/3",
                         payload: (valueMask & 8) != 0
@@ -274,6 +277,49 @@ module.exports = function(RED){
     }
 
     RED.nodes.registerType('TinkerForge Digital-In', tinkerForgeDigitalIn);
+
+    function tinkerForgeDigitalOut(n) {
+        RED.nodes.createNode(this,n);
+
+        this.device = n.device;
+        this.sensor = n.sensor;
+        this.name = n.name;
+        var node = this;
+
+        node.ipcon = devices[this.device].ipcon;
+
+        node.ido4 = new Tinkerforge.BrickletIndustrialDigitalOut4(node.sensor, node.ipcon);
+
+        node.on('input', function(msg){
+            var mask = -1;
+            if (Array.isArray(msg.payload)) {
+                if (msg.payload.length == 4) {
+                    mask = 0;
+                    for (var i=0; i<4; i++) {
+                        if (msg.payload[i]) {
+                            var n = (1 << i);
+                            mask += n;
+                        }
+                    }
+                    
+                }
+            } else if (typeof msg.payload === "Object"){
+                mask = 0;
+                if (msg.payload.hasOwnProperty("1")) {
+                    if (msg.payload["1"])
+                    mask = 1 << 0;
+                }
+            }
+            if (mask >= 0) {
+                console.log(mask.toString(2));
+                node.ido4.setValue(mask);
+            }
+            
+        });
+
+    }
+
+    RED.nodes.registerType('TinkerForge Digital-Out', tinkerForgeDigitalOut);
 
     function tinkerForgeAmbientLight(n) {
         RED.nodes.createNode(this,n);

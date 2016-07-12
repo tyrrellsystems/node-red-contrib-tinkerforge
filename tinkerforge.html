@@ -464,6 +464,83 @@
 	});
 </script>
 
+<script type="text/x-red" data-template-name="TinkerForge Digital-Out">
+	<div class="form-row">
+        <label for="node-input-device"><i class="fa fa-tasks"></i> Device</label>
+        <input type="text" id="node-input-device" >
+    </div>
+    <div class="form-row">
+    	<label for="node-input-sensor"><i class="fa"></i> Sensor</label>
+    	<select size="4" id="node-input-sensor"></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tasks"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Temperature">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="TinkerForge Digital-Out">
+</script>
+
+<script type="text/javascript">
+	RED.nodes.registerType("TinkerForge Digital-Out",{
+		category: 'TinkerForge',
+		defaults: {
+			device: {type: "TinkerForgeConfig", required: true},
+			sensor: {required: true},
+			//sensor: {type: "TinkerForgeSensor", requried: true},
+			name: {}
+		},
+		outputs: 0,
+		inputs: 1,
+		label: function() {
+			return this.name || "TinkerForge Digital 4 Out";
+		},
+		color: 'gray',
+		icon: 'tf.png',
+		oneditprepare: function() {
+			var node = this;
+
+			if (node.device) {
+				var key = $('#node-input-device').val();
+				$.getJSON('TinkerForge/' + key +"/sensors/" + 224, function(data){
+					$('#node-input-sensor').find('option').remove().end();
+					for (d in data) {
+							$('<option/>',{
+								value: data[d].uid,
+								text: data[d].uid + " - " + data[d].typeName
+							}).appendTo('#node-input-sensor');
+						}
+				});
+			} else {
+				console.log("no device");
+			}
+
+			$('#node-input-device').change(function(){
+				var dev = $('#node-input-device').val();
+				if (dev) {
+					var key = dev;
+					$.getJSON('TinkerForge/' + key +"/sensors/" + 224, function(data){
+						$('#node-input-sensor').find('option').remove().end();
+						for (d in data) {
+							$('<option/>',{
+								value: data[d].uid,
+								text: data[d].uid + " - " + data[d].typeName
+							}).appendTo('#node-input-sensor');
+						}
+					});
+				} else {
+					console.log("no device");
+				}
+			});
+
+			if (node.sensor) {
+				$('#node-input-sensor').val(node.sensor);
+			}
+		}
+	});
+</script>
+
 <script type="text/x-red" data-template-name="TinkerForge AmbientLight">
 	<div class="form-row">
         <label for="node-input-device"><i class="fa fa-tasks"></i> Device</label>
