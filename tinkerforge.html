@@ -13,6 +13,16 @@
 	</div>
 </script>
 
+<script type="text/x-red" data-help-name="TinkerForgeConfig">
+	<p>This node holds details of the instance of Tinkerforge's brickd to connect to</p>
+	<p>This configuration node takes 3 arguments</p>
+	<ul>
+	  <li>Host - DNS name or IP address of the machine running <i>brickd</i></li>
+	  <li>Port - Port number for <i>brickd</i> (default: 4223)</li>
+	  <li>Name - Optional name for the connection</li>
+	</ul>
+</script>
+
 <script type="text/javascript">
 	RED.nodes.registerType("TinkerForgeConfig",{
 		category: 'config',
@@ -58,6 +68,13 @@
 </script>
 
 <script type="text/x-red" data-help-name="TinkerForge Motion">
+  <p>A node to trigger messages based on the TinkerForge Motion Bricklet</p>
+  <p>The node takes a Tinkerforge device and a sensor as configuration parameters.</p>
+  <p>The node outputs 2 messages</p>
+  <ul>
+    <li>payload: true - when movement is detected</li>
+    <li>payload: fale - when no movement has been detected in the bricklets timeout period</li>
+  </ul>
 </script>
 
 <script type="text/javascript">
@@ -144,6 +161,9 @@
 </script>
 
 <script type="text/x-red" data-help-name="TinkerForge Humidity">
+  <p>A node to trigger messages based on the TinkerForge Humidity Bricklet</p>
+  <p>The node takes a Tinkerforge device, a sensor and a poll interval as configuration parameters.</p>
+  <p>It outputs a message with relative humidity value as a value between 0 and 100 in the payload</p>
 </script>
 
 <script type="text/javascript">
@@ -417,7 +437,7 @@
 		outputs: 1,
 		inputs: 0,
 		label: function() {
-			return this.name || "TinkerForge Digit In";
+			return this.name || "TinkerForge Digital In 4";
 		},
 		color: 'gray',
 		icon: 'tf.png',
@@ -494,7 +514,7 @@
 		outputs: 0,
 		inputs: 1,
 		label: function() {
-			return this.name || "TinkerForge Digital 4 Out";
+			return this.name || "TinkerForge Digital Out 4";
 		},
 		color: 'gray',
 		icon: 'tf.png',
