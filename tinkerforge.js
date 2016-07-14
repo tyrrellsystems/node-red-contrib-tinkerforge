@@ -6,6 +6,7 @@ var util = require('util');
 var bodyParser = require('body-parser');
 var Tinkerforge = require('tinkerforge');
 var bricklets = require('./lib/bricklets');
+var colours = require('./lib/colours');
 
 var devices = {};
 
@@ -354,6 +355,95 @@ module.exports = function(RED){
     };
 
     RED.nodes.registerType('TinkerForge AmbientLight', tinkerForgeAmbientLight);
+
+    function tinkerForgeLEDStrip(n) {
+        RED.nodes.createNode(this,n);
+
+        this.device = n.device;
+        this.sensor = n.sensor;
+        this.name = n.name;
+        this.rgb = n.rgb || "rgb";
+        this.mode = n.mode;
+        this.bgnd = n.bgnd; 
+        this.pixels = n.pixels;
+        this.wipe = Number(n.wipe || 40)
+        if (this.wipe <0) {this.wipe = 0};
+
+        var needle = "255,255,255";
+
+        var node = this;
+
+        node.ipcon = devices[this.device].ipcon;
+        node.led = new Tinkerforge.BrickletLEDStrip(node.sensor, node.ipcon);
+        //node.led.setFrameDuration(50000);
+
+        node.on('input', function(msg){
+
+            var r = [];
+            var g = [];
+            var b = [];
+            if (msg.hasOwnProperty('payload')) {
+                var pay = msg.payload.toString().toUpperCase();
+                var parts = pay.split(',');
+                switch(parts.length) {
+                    case 2:
+                        // hmm
+                        break;
+                    case 3:
+                        for (var i=0; i<node.pixels; i++) {
+                            if (node.mode === 'rgb') {
+                                r.push(Number(parts[0]));
+                                g.push(Number(parts[1]));
+                                b.push(Number(parts[2]));
+                            } else if (node.mode === 'bgr') {
+                                r.push(Number(parts[2]));
+                                g.push(Number(parts[1]));
+                                b.push(Number(parts[0]));
+                            } else if ( node.mode === 'brg') {
+                                r.push(Number(parts[2]));
+                                g.push(Number(parts[1]));
+                                b.push(Number(parts[0]));
+                            }
+                        }
+                        break;
+                    case 4:
+                        if (node.mode === 'rgb') {
+                            r[parts[0]] = parts[1];
+                            g[parts[0]] = parts[2];
+                            b[parts[0]] = parts[3];
+                        } else if (node.mode === 'bgr') {
+                            b[parts[0]] = parts[1];
+                            g[parts[0]] = parts[2];
+                            r[parts[0]] = parts[3];
+                        } else if (node.mode === 'brg') {
+                            b[parts[0]] = parts[1];
+                            r[parts[0]] = parts[2];
+                            g[parts[0]] = parts[3];
+                        }
+                        break;
+                }
+                if (node.pixels < 16) {
+                    node.led.setRGBValues(0,node.pixels,r,g,b);
+                } else {
+                    var c = Math.floor(node.pixels / 16);
+                    var remainder = node.pixels % 16;
+                    for (var i = 0; i<c ; i++) {
+                        node.led.setRGBValues(i*16,16,r,g,b);
+                    }
+                    if (remainder) {
+                        node.led.setRGBValues((c * 16),remainder,r,g,b);
+                    }
+                }
+            }
+        });
+
+        node.on('close',function() {
+            node.ipcon.disconnect();
+        });
+
+    };
+
+    RED.nodes.registerType('TinkerForge LEDStrip', tinkerForgeLEDStrip);
 
     RED.httpAdmin.use('/TinkerForge/device',bodyParser.json());
 
