@@ -14,6 +14,8 @@ function newDevice(host, port, id) {
     var name = host + ":" + port;
     var ipcon = new Tinkerforge.IPConnection();
     var dev = {
+        host: host,
+        port: port,
         ipcon: ipcon,
         sensors: {}
     };
@@ -79,10 +81,24 @@ module.exports = function(RED){
         this.topic = n.topic;
         var node = this;
 
-        node.ipcon = devices[this.device].ipcon;
+        node.ipcon = new Tinkerforge.IPConnection(); //devices[this.device].ipcon;
+        node.ipcon.setAutoReconnect(true);
+        node.ipcon.connect(devices[node.device].host, devices[node.device].port,function(error){
+            if(error) {
+                node.warn("couldn't connect");
+            }
+        });
 
-        node.md = new Tinkerforge.BrickletMotionDetector(node.sensor, node.ipcon);
-        
+        node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
+        function(connectReason) {
+            node.md = new Tinkerforge.BrickletMotionDetector(node.sensor, node.ipcon);
+            node.md.on(Tinkerforge.BrickletMotionDetector.CALLBACK_MOTION_DETECTED,detected);
+
+            // Register detection cycle ended callback
+            node.md.on(Tinkerforge.BrickletMotionDetector.CALLBACK_DETECTION_CYCLE_ENDED,
+                ended
+            );
+        });
 
         var detected = function () {
             node.send({
@@ -91,8 +107,6 @@ module.exports = function(RED){
             });
         }
 
-        node.md.on(Tinkerforge.BrickletMotionDetector.CALLBACK_MOTION_DETECTED,detected);
-
         var ended = function () {
             node.send({
                 topic: node.topic || "movement",
@@ -100,10 +114,7 @@ module.exports = function(RED){
             });
         }
 
-        // Register detection cycle ended callback
-        node.md.on(Tinkerforge.BrickletMotionDetector.CALLBACK_DETECTION_CYCLE_ENDED,
-            ended
-        );
+        
 
         node.on('close',function() {
             node.ipcon.disconnect();
@@ -122,8 +133,18 @@ module.exports = function(RED){
         this.pollTime = n.pollTime;
         var node = this;
 
-        node.ipcon = devices[this.device].ipcon;
-        node.h = new Tinkerforge.BrickletHumidity(node.sensor, node.ipcon);
+        node.ipcon = new Tinkerforge.IPConnection(); //devices[this.device].ipcon;
+        node.ipcon.setAutoReconnect(true);
+        node.ipcon.connect(devices[node.device].host, devices[node.device].port,function(error){
+            if(error) {
+                node.warn("couldn't connect");
+            }
+        });
+        
+        node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
+        function(connectReason) {
+            node.h = new Tinkerforge.BrickletHumidity(node.sensor, node.ipcon);
+        });
 
         setInterval(function(){
             node.h.getHumidity(function(humidity) {
@@ -156,9 +177,18 @@ module.exports = function(RED){
         this.pollTime = n.pollTime;
         var node = this;
 
-        node.ipcon = devices[this.device].ipcon;
+        node.ipcon = new Tinkerforge.IPConnection(); //devices[this.device].ipcon;
+        node.ipcon.setAutoReconnect(true);
+        node.ipcon.connect(devices[node.device].host, devices[node.device].port,function(error){
+            if(error) {
+                node.warn("couldn't connect");
+            }
+        });
 
-        node.t = new Tinkerforge.BrickletPTC(node.sensor, node.ipcon);
+        node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
+        function(connectReason) {
+            node.t = new Tinkerforge.BrickletPTC(node.sensor, node.ipcon);
+        });
 
         node.interval = setInterval(function(){
             node.t.getTemperature(function(temp) {
@@ -191,9 +221,18 @@ module.exports = function(RED){
         this.pollTime = n.pollTime;
         var node = this;
 
-        node.ipcon = devices[this.device].ipcon;
+        node.ipcon = new Tinkerforge.IPConnection(); //devices[this.device].ipcon;
+        node.ipcon.setAutoReconnect(true);
+        node.ipcon.connect(devices[node.device].host, devices[node.device].port,function(error){
+            if(error) {
+                node.warn("couldn't connect");
+            }
+        });
 
-        node.t = new Tinkerforge.BrickletTemperature(node.sensor, node.ipcon);
+        node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
+        function(connectReason) {
+            node.t = new Tinkerforge.BrickletTemperature(node.sensor, node.ipcon);
+        });
 
         node.interval = setInterval(function(){
             node.t.getTemperature(function(temp) {
@@ -228,46 +267,55 @@ module.exports = function(RED){
 
         node.currentState = 0;
 
-        node.ipcon = devices[this.device].ipcon;
-
-        node.idi4 = new Tinkerforge.BrickletIndustrialDigitalIn4(node.sensor, node.ipcon);
-        //((1 << 0) + (1 << 1) + (1 << 2) + (1 << 3))
-        node.idi4.setInterrupt( 15);
-
-        node.idi4.on(Tinkerforge.BrickletIndustrialDigitalIn4.CALLBACK_INTERRUPT, 
-            function(interupMask, valueMask){
-                // console.log("int mask - " + interupMask.toString(2));
-                // console.log("val mask - " + valueMask.toString(2));
-
-                if ((valueMask & 1) !== (node.currentState & 1)) {
-                    node.send({
-                        topic: node.topic + "/0",
-                        payload: (valueMask & 1)  != 0
-                    });
-                }
-
-                if ((valueMask & 2) !== (node.currentState & 2)) {
-                    node.send({
-                        topic: node.topic + "/1",
-                        payload: (valueMask & 2) != 0
-                    });
-                }
-
-                if ((valueMask & 4) !== (node.currentState & 4)) {
-                    node.send({
-                        topic: node.topic + "/2",
-                        payload: (valueMask & 4) != 0
-                    });
-                }
-
-                if ((valueMask & 8) !== (node.currentState & 8)) {
-                    node.send({
-                        topic: node.topic + "/3",
-                        payload: (valueMask & 8) != 0
-                    });
-                }
-                node.currentState = valueMask;
+        node.ipcon = new Tinkerforge.IPConnection(); //devices[this.device].ipcon;
+        node.ipcon.setAutoReconnect(true);
+        node.ipcon.connect(devices[node.device].host, devices[node.device].port,function(error){
+            if(error) {
+                node.warn("couldn't connect");
+            }
         });
+
+        node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
+        function(connectReason) {
+            node.idi4 = new Tinkerforge.BrickletIndustrialDigitalIn4(node.sensor, node.ipcon);
+            //((1 << 0) + (1 << 1) + (1 << 2) + (1 << 3))
+            node.idi4.setInterrupt( 15);
+            node.idi4.on(Tinkerforge.BrickletIndustrialDigitalIn4.CALLBACK_INTERRUPT, 
+                function(interupMask, valueMask){
+                    // console.log("int mask - " + interupMask.toString(2));
+                    // console.log("val mask - " + valueMask.toString(2));
+
+                    if ((valueMask & 1) !== (node.currentState & 1)) {
+                        node.send({
+                            topic: node.topic + "/0",
+                            payload: (valueMask & 1)  != 0
+                        });
+                    }
+
+                    if ((valueMask & 2) !== (node.currentState & 2)) {
+                        node.send({
+                            topic: node.topic + "/1",
+                            payload: (valueMask & 2) != 0
+                        });
+                    }
+
+                    if ((valueMask & 4) !== (node.currentState & 4)) {
+                        node.send({
+                            topic: node.topic + "/2",
+                            payload: (valueMask & 4) != 0
+                        });
+                    }
+
+                    if ((valueMask & 8) !== (node.currentState & 8)) {
+                        node.send({
+                            topic: node.topic + "/3",
+                            payload: (valueMask & 8) != 0
+                        });
+                    }
+                    node.currentState = valueMask;
+            });
+        });
+
 
         node.on('close',function() {
             node.ipcon.disconnect();
@@ -285,9 +333,18 @@ module.exports = function(RED){
         this.name = n.name;
         var node = this;
 
-        node.ipcon = devices[this.device].ipcon;
+        node.ipcon = new Tinkerforge.IPConnection(); //devices[this.device].ipcon;
+        node.ipcon.setAutoReconnect(true);
+        node.ipcon.connect(devices[node.device].host, devices[node.device].port,function(error){
+            if(error) {
+                node.warn("couldn't connect");
+            }
+        });
 
-        node.ido4 = new Tinkerforge.BrickletIndustrialDigitalOut4(node.sensor, node.ipcon);
+        node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
+        function(connectReason) {
+            node.ido4 = new Tinkerforge.BrickletIndustrialDigitalOut4(node.sensor, node.ipcon);
+        });
 
         node.on('input', function(msg){
             var mask = -1;
@@ -330,8 +387,18 @@ module.exports = function(RED){
         this.pollTime = n.pollTime;
         var node = this;
 
-        node.ipcon = devices[this.device].ipcon;
-        node.al = new Tinkerforge.BrickletAmbientLightV2(node.sensor, node.ipcon);
+        node.ipcon = new Tinkerforge.IPConnection(); //devices[this.device].ipcon;
+        node.ipcon.setAutoReconnect(true);
+        node.ipcon.connect(devices[node.device].host, devices[node.device].port,function(error){
+            if(error) {
+                node.warn("couldn't connect");
+            }
+        });
+
+        node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
+        function(connectReason) {
+            node.al = new Tinkerforge.BrickletAmbientLightV2(node.sensor, node.ipcon);
+        });
 
         node.interval = setInterval(function(){
             node.al.getIlluminance(function(lux) {
@@ -371,8 +438,20 @@ module.exports = function(RED){
 
         var node = this;
 
-        node.ipcon = devices[this.device].ipcon;
-        node.led = new Tinkerforge.BrickletLEDStrip(node.sensor, node.ipcon);
+        node.ipcon = new Tinkerforge.IPConnection(); //devices[this.device].ipcon;
+        node.ipcon.setAutoReconnect(true);
+        node.ipcon.connect(devices[node.device].host, devices[node.device].port,function(error){
+            if(error) {
+                node.warn("couldn't connect");
+            }
+        });
+
+        node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
+        function(connectReason) {
+            node.led = new Tinkerforge.BrickletLEDStrip(node.sensor, node.ipcon);
+        });
+
+        
 
         node.r = new Array(Number(node.pixels));
         node.g = new Array(Number(node.pixels));
