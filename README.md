@@ -5,7 +5,7 @@ to a local brickd instance or to a remote instance (via Ethernet/WiFi brick)
 
 ##Supported Bricklets
 
-Currently there nodes for the following bricklets
+Currently there are nodes for the following bricklets
 
  - Humidity Bricklet
  - Temperature Bricklet
@@ -14,10 +14,11 @@ Currently there nodes for the following bricklets
  - PTC Bricklet
  - LED Strip Bricklet
  - Motion Detector Bricklet
- - Analog Out Bricklet
+ - Analog Out Bricklet 2.0
  - Ambient Light Bricklet 2.0
 
-Adding more should be pretty trivial, these are just the bricks I've got imeadiate access to
+Adding more should be pretty trivial, these are just the bricks I currently 
+access to for testing
 
 ##License
 Apache 2.0

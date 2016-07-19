@@ -95,9 +95,7 @@ module.exports = function(RED){
             node.md.on(Tinkerforge.BrickletMotionDetector.CALLBACK_MOTION_DETECTED,detected);
 
             // Register detection cycle ended callback
-            node.md.on(Tinkerforge.BrickletMotionDetector.CALLBACK_DETECTION_CYCLE_ENDED,
-                ended
-            );
+            node.md.on(Tinkerforge.BrickletMotionDetector.CALLBACK_DETECTION_CYCLE_ENDED,ended);
         });
 
         var detected = function () {
@@ -105,14 +103,14 @@ module.exports = function(RED){
                 topic: node.topic || "movement",
                 payload: true
             });
-        }
+        };
 
         var ended = function () {
             node.send({
                 topic: node.topic || "movement",
                 payload: false
             });
-        }
+        };
 
         
 
@@ -151,7 +149,7 @@ module.exports = function(RED){
                 node.send({
                     topic: node.topic || 'humidity',
                     payload: humidity/10.0
-                })
+                });
             },
             function(err) {
                 //error
@@ -195,7 +193,7 @@ module.exports = function(RED){
                 node.send({
                     topic: node.topic || 'temperature',
                     payload: temp/100.0
-                })
+                });
             },
             function(err) {
                 //error
@@ -359,11 +357,30 @@ module.exports = function(RED){
                     }
                     
                 }
-            } else if (typeof msg.payload === "Object"){
+            } else if (typeof msg.payload === "object"){
                 mask = 0;
+                if (msg.payload.hasOwnProperty("0")) {
+                    if (msg.payload["0"]) {
+                        mask += (1 << 0);
+                    }
+                }
+
                 if (msg.payload.hasOwnProperty("1")) {
-                    if (msg.payload["1"])
-                    mask = 1 << 0;
+                    if(msg.payload["1"]) {
+                        mask += (1 << 1)
+                    }
+                }
+
+                if (msg.payload.hasOwnProperty("2")) {
+                    if(msg.payload["2"]) {
+                        mask += (1 << 2)
+                    }
+                }
+
+                if (msg.payload.hasOwnProperty("3")) {
+                    if(msg.payload["3"]) {
+                        mask += (1 << 3)
+                    }
                 }
             }
             if (mask >= 0) {
@@ -401,16 +418,18 @@ module.exports = function(RED){
         });
 
         node.interval = setInterval(function(){
-            node.al.getIlluminance(function(lux) {
-                node.send({
-                    topic: node.topic || 'light',
-                    payload: lux/100.0
-                })
-            },
-            function(err) {
-                //error
-                node.error(err);
-            });
+            if (node.al) {
+                node.al.getIlluminance(function(lux) {
+                    node.send({
+                        topic: node.topic || 'light',
+                        payload: lux/100.0
+                    })
+                },
+                function(err) {
+                    //error
+                    node.error(err);
+                });
+            }
         },(node.pollTime * 1000));
 
         node.on('close',function() {
@@ -449,6 +468,8 @@ module.exports = function(RED){
         node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
         function(connectReason) {
             node.led = new Tinkerforge.BrickletLEDStrip(node.sensor, node.ipcon);
+            setBackground();
+            sendRGB();
         });
 
         
@@ -504,11 +525,6 @@ module.exports = function(RED){
                 node.b.fill(parts[1]);
             }
         }
-
-        setTimeout(function(){
-            setBackground();
-            sendRGB();
-        },500);
 
         node.on('input', function(msg){
 
@@ -587,6 +603,45 @@ module.exports = function(RED){
     };
 
     RED.nodes.registerType('TinkerForge LEDStrip', tinkerForgeLEDStrip);
+
+
+    function tinkerForgeAnalogOut(n) {
+        RED.nodes.createNode(this,n);
+        this.device = n.device;
+        this.sensor = n.sensor;
+        this.name = n.name;
+        var node = this;
+
+        node.ipcon = new Tinkerforge.IPConnection(); //devices[this.device].ipcon;
+        node.ipcon.setAutoReconnect(true);
+        node.ipcon.connect(devices[node.device].host, devices[node.device].port,function(error){
+            if(error) {
+                node.warn("couldn't connect");
+            }
+        });
+
+        node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
+        function(connectReason) {
+            node.ao = new Tinkerforge.BrickletAnalogOutV2(node.sensor, node.ipcon);
+        });
+
+
+        node.on('input', function(msg){
+            if(node.ao) {
+                var v = Math.round(msg.payload * 1000);
+                node.ao.setOutputVoltage(v);
+            }
+        });
+        
+
+        node.on('close',function() {
+            node.ipcon.disconnect();
+        });
+    }
+
+    RED.nodes.registerType('TinkerForge AnalogOut', tinkerForgeAnalogOut);
+
+    //Discovery HTTP endpoints
 
     RED.httpAdmin.use('/TinkerForge/device',bodyParser.json());
 
