@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 
 var events = require('events');
@@ -22,7 +22,7 @@ function newDevice(host, port, id) {
     ipcon.setAutoReconnect(true);
     ipcon.connect(host, port,
         function(error) {
-            console.log('Error: ' + error);
+            console.log('Error connecting to ' + name + ' : ' + error);
         }
     );
 
@@ -41,7 +41,7 @@ function newDevice(host, port, id) {
                 position: position,
                 hardwareVersion: hardwareVersion,
                 firmwareVersion: firmwareVersion
-            }
+            };
             devices[id].sensors[sensor.uid] = sensor;
             //console.log(sensor);
         }
@@ -91,9 +91,7 @@ module.exports = function(RED){
             });
         }
 
-        node.md.on(Tinkerforge.BrickletMotionDetector.CALLBACK_MOTION_DETECTED,
-            detected
-        );
+        node.md.on(Tinkerforge.BrickletMotionDetector.CALLBACK_MOTION_DETECTED,detected);
 
         var ended = function () {
             node.send({
@@ -364,7 +362,7 @@ module.exports = function(RED){
         this.name = n.name;
         this.rgb = n.rgb || "rgb";
         this.mode = n.mode;
-        this.bgnd = n.bgnd; 
+        this.bgnd = n.bgnd || "0,0,0"; 
         this.pixels = n.pixels;
         this.wipe = Number(n.wipe || 40)
         if (this.wipe <0) {this.wipe = 0};
@@ -375,65 +373,131 @@ module.exports = function(RED){
 
         node.ipcon = devices[this.device].ipcon;
         node.led = new Tinkerforge.BrickletLEDStrip(node.sensor, node.ipcon);
-        //node.led.setFrameDuration(50000);
+
+        node.r = new Array(Number(node.pixels));
+        node.g = new Array(Number(node.pixels));
+        node.b = new Array(Number(node.pixels));
+
+        function sendRGB() {
+            // console.log("setting RGB");
+            // console.log("red - %j", node.r);
+            // console.log("green - %j", node.g);
+            // console.log("blue - %j", node.b);
+            if (node.pixels < 16) {
+                // console.log("short");
+                node.led.setRGBValues(0,node.pixels,node.r,node.g,node.b);
+            } else {
+                // console.log("long");
+                var c = Math.floor(node.pixels / 16);
+                var remainder = node.pixels % 16;
+                for (var i = 0; i<c ; i++) {
+                    // console.log("block");
+                    // console.log("red - %j", node.r.slice((i*16), ((i+1)*16)));
+                    // console.log("green - %j", node.g.slice((i*16), ((i+1)*16)));
+                    // console.log("blue - %j", node.b.slice((i*16), ((i+1)*16)));
+                    node.led.setRGBValues(i*16,16,
+                        node.r.slice((i*16), ((i+1)*16)),
+                        node.g.slice((i*16), ((i+1)*16)),
+                        node.b.slice((i*16), ((i+1)*16)));
+                }
+                if (remainder) {
+                    // console.log("remainder");
+                    // console.log("red - %j", node.r.slice((c*16), (c*16) + remainder));
+                    // console.log("green - %j", node.g.slice((c*16), (c*16) + remainder));
+                    // console.log("blue - %j", node.b.slice((c*16), (c*16) + remainder));
+                    node.led.setRGBValues((c * 16),remainder,
+                        node.r.slice((c*16), (c*16) + remainder),
+                        node.g.slice((c*16), (c*16) + remainder),
+                        node.b.slice((c*16), (c*16) + remainder));
+                }
+            }
+        }
+
+        function setBackground() {
+            var parts = node.bgnd.split(',');
+            if (node.rgb === 'rgb') {
+                node.r.fill(parts[0]);
+                node.g.fill(parts[1]);
+                node.b.fill(parts[2]);
+            } else if ( node.rgb === 'brg') {
+                node.r.fill(parts[2]);
+                node.g.fill(parts[0]);
+                node.b.fill(parts[1]);
+            }
+        }
+
+        setTimeout(function(){
+            setBackground();
+            sendRGB();
+        },500);
 
         node.on('input', function(msg){
 
-            var r = [];
-            var g = [];
-            var b = [];
             if (msg.hasOwnProperty('payload')) {
                 var pay = msg.payload.toString().toUpperCase();
                 var parts = pay.split(',');
                 switch(parts.length) {
-                    case 2:
-                        // hmm
-                        break;
+                    case 1:
+                        // #rrggbb
+                        var col = colours.getRGB(parts[0],"rgb");
+                        parts = col.split(",");
                     case 3:
-                        for (var i=0; i<node.pixels; i++) {
-                            if (node.mode === 'rgb') {
-                                r.push(Number(parts[0]));
-                                g.push(Number(parts[1]));
-                                b.push(Number(parts[2]));
-                            } else if (node.mode === 'bgr') {
-                                r.push(Number(parts[2]));
-                                g.push(Number(parts[1]));
-                                b.push(Number(parts[0]));
-                            } else if ( node.mode === 'brg') {
-                                r.push(Number(parts[2]));
-                                g.push(Number(parts[1]));
-                                b.push(Number(parts[0]));
-                            }
-                        }
+                        node.bgnd = parts.join(',');
+                        setBackground();
                         break;
+                    case 2:
+                        // length,colour or colour,length
+                        var col = "";
+                        var index = -1;
+                        if (isNaN(parts[1])){
+                            col = colours.getRGB(parts[1],"rgb");
+                            index = parts[0];
+                        } else {
+                            col = colours.getRGB(parts[0],"rgb");
+                            index = parts[1];
+                        }
+                        
+                        parts = new Array(4);
+                        var colParts = col.split(",");
+                        parts[0] = index;
+                        parts[1] = colParts[0];
+                        parts[2] = colParts[1];
+                        parts[3] = colParts[2];
                     case 4:
-                        if (node.mode === 'rgb') {
-                            r[parts[0]] = parts[1];
-                            g[parts[0]] = parts[2];
-                            b[parts[0]] = parts[3];
-                        } else if (node.mode === 'bgr') {
-                            b[parts[0]] = parts[1];
-                            g[parts[0]] = parts[2];
-                            r[parts[0]] = parts[3];
-                        } else if (node.mode === 'brg') {
-                            b[parts[0]] = parts[1];
-                            r[parts[0]] = parts[2];
-                            g[parts[0]] = parts[3];
+                        setBackground();
+                        switch (node.mode){
+                            case 'pcent':
+                                var n = Math.round(node.pixels * (parts[0] / 100));
+                                parts[0] = n;
+                            case 'pixels':
+                                if (node.rgb === 'rgb') {
+                                    node.r.fill(parts[1],0,parts[0]);
+                                    node.g.fill(parts[2],0,parts[0]);
+                                    node.b.fill(parts[3],0,parts[0]);
+                                } else if (node.rgb ==='brg'){
+                                    node.r.fill(parts[3],0,parts[0]);
+                                    node.g.fill(parts[1],0,parts[0]);
+                                    node.b.fill(parts[2],0,parts[0]);
+                                }
+                                break;
+                            case 'pcentneedle':
+                                var n = Math.round(node.pixels * (parts[0] / 100));
+                                parts[0] = n;
+                            case 'pixelsneedle':
+                                if (node.rgb === 'rgb') {
+                                    node.r[parts[0]] = parts[1];
+                                    node.g[parts[0]] = parts[2];
+                                    node.b[parts[0]] = parts[3];
+                                } else if (node.rgb === 'brg') {
+                                    node.r[parts[0]] = parts[3];
+                                    node.g[parts[0]] = parts[1];
+                                    node.b[parts[0]] = parts[2];
+                                }
+                                break;
                         }
                         break;
                 }
-                if (node.pixels < 16) {
-                    node.led.setRGBValues(0,node.pixels,r,g,b);
-                } else {
-                    var c = Math.floor(node.pixels / 16);
-                    var remainder = node.pixels % 16;
-                    for (var i = 0; i<c ; i++) {
-                        node.led.setRGBValues(i*16,16,r,g,b);
-                    }
-                    if (remainder) {
-                        node.led.setRGBValues((c * 16),remainder,r,g,b);
-                    }
-                }
+                sendRGB();
             }
         });
 
