@@ -1,3 +1,15 @@
+<!--
+  Copyright 2016 IBM Corp.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
 <script type="text/x-red" data-template-name="TinkerForgeConfig">
 	<div class="form-row">
 		<label for="node-config-input-host"><i class="fa "></i> Host</label>
@@ -500,6 +512,7 @@
 </script>
 
 <script type="text/x-red" data-help-name="TinkerForge Digital-Out">
+	<p></p>
 </script>
 
 <script type="text/javascript">
@@ -692,8 +705,19 @@
 
 <script type="text/x-red" data-help-name="TinkerForge LEDStrip">
 	<p>A node to control the LED strip bricklet. It is based on the neopixel node 
-	and takes the same input formats.</p>
+	and supports most of the same input input formats.</p>
 
+	<p>It supports the following modes:</p>
+	<ul>
+		<li>Bar - percentage of length</li>
+		<li>Bar - number of pixels</li>
+		<li>Needle - percentage of length</li>
+		<li>Needle - number of pixels</li>
+	</ul>
+
+	<p>Some LED strips take input values in RGB order and some in BRG, this node 
+	always takes input in RGB order and there is a configuration option to set
+	the order the stip requires.</p>
 
 </script>
 
@@ -776,7 +800,9 @@
 </script>
 
 <script type="text/x-red" data-help-name="TinkerForge AnalogOut">
-
+	<p>A node to control the Tinkerforge Analog Out v2.0 bricklet</p>
+	<p>The node takes a msg.payload value between 0 and 12 and this 
+	sets the output voltage for the bricklet</p>
 </script>
 
 <script type="text/javascript">
