@@ -38,7 +38,6 @@ function newDevice(host, port, id) {
     };
 
     devices[id] = dev;
-    ipcon.setAutoReconnect(true);
     ipcon.connect(host, port,
         function(error) {
             console.log('Error connecting to ' + name + ' : ' + error);
@@ -254,7 +253,7 @@ module.exports = function(RED){
                 node.send({
                     topic: node.topic || 'temperature',
                     payload: temp/100.0
-                })
+                });
             },
             function(err) {
                 //error
@@ -453,7 +452,7 @@ module.exports = function(RED){
             clearInterval(node.interval);
             node.ipcon.disconnect();
         });
-    };
+    }
 
     RED.nodes.registerType('TinkerForge AmbientLight', tinkerForgeAmbientLight);
 
@@ -468,7 +467,7 @@ module.exports = function(RED){
         this.bgnd = n.bgnd || "0,0,0"; 
         this.pixels = n.pixels;
         this.wipe = Number(n.wipe || 40)
-        if (this.wipe <0) {this.wipe = 0};
+        if (this.wipe <0) {this.wipe = 0}
 
         var needle = "255,255,255";
 
@@ -617,7 +616,7 @@ module.exports = function(RED){
             node.ipcon.disconnect();
         });
 
-    };
+    }
 
     RED.nodes.registerType('TinkerForge LEDStrip', tinkerForgeLEDStrip);
 
