@@ -160,7 +160,7 @@ module.exports = function(RED){
             node.h = new Tinkerforge.BrickletHumidity(node.sensor, node.ipcon);
         });
 
-        setInterval(function(){
+        node.interval = setInterval(function(){
             node.h.getHumidity(function(humidity) {
                 node.send({
                     topic: node.topic || 'humidity',
@@ -177,6 +177,7 @@ module.exports = function(RED){
 
         node.on('close',function() {
             node.ipcon.disconnect();
+            clearInterval(node.interval);
         });
     }
 
