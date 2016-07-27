@@ -18,7 +18,12 @@
   "license": "Apache-2.0",
   "node-red": {
     "nodes": {
-      "tinkerforge": "tinkerforge.js"
+      "tinkerforge": "tinkerforge.js",
+      "motion": "bricklets/Motion.js",
+      "humidity": "bricklets/Humidity.js",
+      "temperature": "bricklets/Temperature.js",
+      "ptc": "bricklets/PTC.js",
+      "ledStrip": "bricklets/LEDStrip.js"
     }
   }
 }
