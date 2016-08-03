@@ -68,74 +68,74 @@ function newDevice(host, port, id) {
 
 module.exports = function(RED){
 
-    var settings = RED.settings;
+    // var settings = RED.settings;
 
-    function tinkerForgeConfig(n) {
-        RED.nodes.createNode(this,n);
-        this.host = n.host;
-        this.port = n.port;
-        this.name = n.host + ":" + n.port;
-        this.id = n.id;
+    // function tinkerForgeConfig(n) {
+    //     RED.nodes.createNode(this,n);
+    //     this.host = n.host;
+    //     this.port = n.port;
+    //     this.name = n.host + ":" + n.port;
+    //     this.id = n.id;
 
-        var node = this;
+    //     var node = this;
 
-        if (devices[node.name]) {
-            //already exists?
-        } else {
-            newDevice(node.host,node.port,node.id);
-        }
+    //     if (devices[node.name]) {
+    //         //already exists?
+    //     } else {
+    //         newDevice(node.host,node.port,node.id);
+    //     }
             
-    }
+    // }
 
-    RED.nodes.registerType('TinkerForgeConfig', tinkerForgeConfig);
+    // RED.nodes.registerType('TinkerForgeConfig', tinkerForgeConfig);
 
-    function tinkerForgeMovement(n) {
-        RED.nodes.createNode(this,n);
-        this.device = n.device;
-        this.sensor = n.sensor;
-        this.name = n.name;
-        this.topic = n.topic;
-        var node = this;
+    // function tinkerForgeMovement(n) {
+    //     RED.nodes.createNode(this,n);
+    //     this.device = n.device;
+    //     this.sensor = n.sensor;
+    //     this.name = n.name;
+    //     this.topic = n.topic;
+    //     var node = this;
 
-        node.ipcon = new Tinkerforge.IPConnection(); //devices[this.device].ipcon;
-        node.ipcon.setAutoReconnect(true);
-        node.ipcon.connect(devices[node.device].host, devices[node.device].port,function(error){
-            if(error) {
-                node.warn("couldn't connect");
-            }
-        });
+    //     node.ipcon = new Tinkerforge.IPConnection(); //devices[this.device].ipcon;
+    //     node.ipcon.setAutoReconnect(true);
+    //     node.ipcon.connect(devices[node.device].host, devices[node.device].port,function(error){
+    //         if(error) {
+    //             node.warn("couldn't connect");
+    //         }
+    //     });
 
-        node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
-        function(connectReason) {
-            node.md = new Tinkerforge.BrickletMotionDetector(node.sensor, node.ipcon);
-            node.md.on(Tinkerforge.BrickletMotionDetector.CALLBACK_MOTION_DETECTED,detected);
+    //     node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
+    //     function(connectReason) {
+    //         node.md = new Tinkerforge.BrickletMotionDetector(node.sensor, node.ipcon);
+    //         node.md.on(Tinkerforge.BrickletMotionDetector.CALLBACK_MOTION_DETECTED,detected);
 
-            // Register detection cycle ended callback
-            node.md.on(Tinkerforge.BrickletMotionDetector.CALLBACK_DETECTION_CYCLE_ENDED,ended);
-        });
+    //         // Register detection cycle ended callback
+    //         node.md.on(Tinkerforge.BrickletMotionDetector.CALLBACK_DETECTION_CYCLE_ENDED,ended);
+    //     });
 
-        var detected = function () {
-            node.send({
-                topic: node.topic || "movement",
-                payload: true
-            });
-        };
+    //     var detected = function () {
+    //         node.send({
+    //             topic: node.topic || "movement",
+    //             payload: true
+    //         });
+    //     };
 
-        var ended = function () {
-            node.send({
-                topic: node.topic || "movement",
-                payload: false
-            });
-        };
+    //     var ended = function () {
+    //         node.send({
+    //             topic: node.topic || "movement",
+    //             payload: false
+    //         });
+    //     };
 
         
 
-        node.on('close',function() {
-            node.ipcon.disconnect();
-        });
-    }
+    //     node.on('close',function() {
+    //         node.ipcon.disconnect();
+    //     });
+    // }
 
-    RED.nodes.registerType('TinkerForge Motion', tinkerForgeMovement);
+    // RED.nodes.registerType('TinkerForge Motion', tinkerForgeMovement);
 
 
     function tinkerForgeHumidity(n) {

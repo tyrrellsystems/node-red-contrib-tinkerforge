@@ -10,55 +10,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<script type="text/x-red" data-template-name="TinkerForgeConfig">
-	<div class="form-row">
-		<label for="node-config-input-host"><i class="fa "></i> Host</label>
-		<input type="text" id="node-config-input-host" placeholder="127.0.0.1">
-	</div>
-	<div class="form-row">
-		<label for="node-config-input-port"><i class="fa "></i> Port</label>
-		<input type="text" id="node-config-input-port">
-	</div>
-	<div class="form-row">
-		<label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
-		<input type="text" id="node-config-input-name">
-	</div>
-</script>
 
-<script type="text/x-red" data-help-name="TinkerForgeConfig">
-	<p>This node holds details of the instance of Tinkerforge's brickd to connect to</p>
-	<p>This configuration node takes 3 arguments</p>
-	<ul>
-	  <li>Host - DNS name or IP address of the machine running <i>brickd</i></li>
-	  <li>Port - Port number for <i>brickd</i> (default: 4223)</li>
-	  <li>Name - Optional name for the connection</li>
-	</ul>
-</script>
-
-<script type="text/javascript">
-	RED.nodes.registerType("TinkerForgeConfig",{
-		category: 'config',
-		defaults: {
-			host: {required: true},
-			port: {value: 4223, required: true},
-			name: {}
-		},
-		label: function() {
-			return this.name || this.host + ":" + this.port;
-		},
-		oneditsave: function() {
-
-			var host = $('#node-config-input-host').val();
-			var port = $('#node-config-input-port').val();
-			var dev = {
-				id: this.id,
-				host: host,
-				port: port
-			};
-			$.post('TinkerForge/device',dev);
-		}
-	});
-</script>
 
 
 
