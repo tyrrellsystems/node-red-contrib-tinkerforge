@@ -18,6 +18,7 @@
 "use strict";
 var Tinkerforge = require('tinkerforge');
 var colours = require('../lib/colours');
+var devices = require('../lib/devices');
 
 module.exports = function(RED) {
 	function tinkerForgeLEDStrip(n) {
@@ -39,7 +40,8 @@ module.exports = function(RED) {
 
         node.ipcon = new Tinkerforge.IPConnection(); //devices[this.device].ipcon;
         node.ipcon.setAutoReconnect(true);
-        node.ipcon.connect(devices[node.device].host, devices[node.device].port,function(error){
+        var devs = devices.getDevices();
+        node.ipcon.connect(devs[node.device].host, devs[node.device].port,function(error){
             if(error) {
                 node.warn("couldn't connect");
             }
