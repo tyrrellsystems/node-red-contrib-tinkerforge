@@ -18,7 +18,16 @@
   "license": "Apache-2.0",
   "node-red": {
     "nodes": {
-      "tinkerforge": "tinkerforge.js"
+      "config": "lib/config.js",
+      "motion": "bricklets/Motion.js",
+      "humidity": "bricklets/Humidity.js",
+      "ptc": "bricklets/PTC.js",
+      "digiout": "bricklets/IndDigital4Out.js",
+      "ambilight": "bricklets/AmbientLight.js",
+      "ledstrip": "bricklets/LEDStrip.js",
+      "temperature": "bricklets/Temperature.js",
+      "digiin": "bricklets/IndDigital4In.js",
+      "analogout": "bricklets/AnalogOut.js"
     }
   }
 }
