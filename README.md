@@ -3,6 +3,16 @@
 These nodes make use of [Tinkerforge's][1] [javascript][2] library to connect 
 to a local brickd instance or to a remote instance (via Ethernet/WiFi brick)
 
+##Install
+
+From npm
+
+npm install node-red-contrib-tinkerforge
+
+or to from the git head stream
+
+npm install hardillb/node-red-contrib-tinkerforge
+
 ##Supported Bricklets
 
 Currently there are nodes for the following bricklets
