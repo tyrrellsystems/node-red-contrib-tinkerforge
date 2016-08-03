@@ -19,13 +19,11 @@
 var Tinkerforge = require('tinkerforge');
 
 module.exports = function(RED) {
-	function tinkerForgePTC(n) {
+	function tinkerForgeAnalogOut(n) {
         RED.nodes.createNode(this,n);
         this.device = n.device;
         this.sensor = n.sensor;
         this.name = n.name;
-        this.topic = n.topic;
-        this.pollTime = n.pollTime;
         var node = this;
 
         node.ipcon = new Tinkerforge.IPConnection(); //devices[this.device].ipcon;
@@ -38,28 +36,26 @@ module.exports = function(RED) {
 
         node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
         function(connectReason) {
-            node.t = new Tinkerforge.BrickletPTC(node.sensor, node.ipcon);
+            node.ao = new Tinkerforge.BrickletAnalogOutV2(node.sensor, node.ipcon);
         });
 
-        node.interval = setInterval(function(){
-            node.t.getTemperature(function(temp) {
-                node.send({
-                    topic: node.topic || 'temperature',
-                    payload: temp/100.0
-                });
-            },
-            function(err) {
-                //error
-                node.error(err);
-            });
-        },(node.pollTime * 1000));
 
-        node.on('close',function() {
-            clearInterval(node.interval);
-            node.ipcon.disconnect();
+        node.on('input', function(msg){
+            if(node.ao) {
+                if (typeof msg.payload === 'number') {
+                    if (msg.payload >=0 && msg.parts <= 12) {
+                        var v = Math.round(msg.payload * 1000);
+                        node.ao.setOutputVoltage(v);
+                    }
+                }
+            }
         });
         
+
+        node.on('close',function() {
+            node.ipcon.disconnect();
+        });
     }
 
-    RED.nodes.registerType('TinkerForge PTC', tinkerForgePTC);
+    RED.nodes.registerType('TinkerForge AnalogOut', tinkerForgeAnalogOut);
 }

@@ -19,8 +19,9 @@
 var Tinkerforge = require('tinkerforge');
 
 module.exports = function(RED) {
-	function tinkerForgePTC(n) {
+	function tinkerForgeAmbientLight(n) {
         RED.nodes.createNode(this,n);
+
         this.device = n.device;
         this.sensor = n.sensor;
         this.name = n.name;
@@ -38,28 +39,29 @@ module.exports = function(RED) {
 
         node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
         function(connectReason) {
-            node.t = new Tinkerforge.BrickletPTC(node.sensor, node.ipcon);
+            node.al = new Tinkerforge.BrickletAmbientLightV2(node.sensor, node.ipcon);
         });
 
         node.interval = setInterval(function(){
-            node.t.getTemperature(function(temp) {
-                node.send({
-                    topic: node.topic || 'temperature',
-                    payload: temp/100.0
+            if (node.al) {
+                node.al.getIlluminance(function(lux) {
+                    node.send({
+                        topic: node.topic || 'light',
+                        payload: lux/100.0
+                    })
+                },
+                function(err) {
+                    //error
+                    node.error(err);
                 });
-            },
-            function(err) {
-                //error
-                node.error(err);
-            });
+            }
         },(node.pollTime * 1000));
 
         node.on('close',function() {
             clearInterval(node.interval);
             node.ipcon.disconnect();
         });
-        
     }
 
-    RED.nodes.registerType('TinkerForge PTC', tinkerForgePTC);
+    RED.nodes.registerType('TinkerForge AmbientLight', tinkerForgeAmbientLight);
 }

@@ -11,7 +11,7 @@
   limitations under the License.
 -->
 
-<script type="text/x-red" data-template-name="TinkerForge Humidity">
+<script type="text/x-red" data-template-name="TinkerForge AnalogOut">
 	<div class="form-row">
         <label for="node-input-device"><i class="fa fa-tasks"></i> Device</label>
         <input type="text" id="node-input-device" >
@@ -21,40 +21,29 @@
     	<select id="node-input-sensor"></select>
     </div>
     <div class="form-row">
-        <label for="node-input-pollTime"><i class="fa fa-clock"></i> Poll Interval</label>
-        <input type="number" id="node-input-pollTime" >
-    </div>
-    <div class="form-row">
-        <label for="node-input-topic"><i class="fa fa-tasks"></i> Topic</label>
-        <input type="text" id="node-input-topic" placeholder="Topic">
-    </div>
-    <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Humidity">
+        <input type="text" id="node-input-name" placeholder="LED Strip">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="TinkerForge Humidity">
-  <p>A node to trigger messages based on the TinkerForge Humidity Bricklet</p>
-  <p>The node takes a Tinkerforge device, a sensor and a poll interval as configuration parameters.</p>
-  <p>It outputs a message with relative humidity value as a value between 0 and 100 in the payload</p>
+<script type="text/x-red" data-help-name="TinkerForge AnalogOut">
+	<p>A node to control the Tinkerforge Analog Out v2.0 bricklet</p>
+	<p>The node takes a msg.payload value between 0 and 12 and this 
+	sets the output voltage for the bricklet</p>
 </script>
 
 <script type="text/javascript">
-	RED.nodes.registerType("TinkerForge Humidity",{
+	RED.nodes.registerType("TinkerForge AnalogOut",{
 		category: 'TinkerForge',
 		defaults: {
 			device: {type: "TinkerForgeConfig", required: true},
 			sensor: {required: true},
-			pollTime: {value: "10", required: true},
-			//sensor: {type: "TinkerForgeSensor", requried: true},
-			name: {},
-			topic: {}
+			name: {}
 		},
-		outputs: 1,
-		inputs: 0,
+		outputs: 0,
+		inputs: 1,
 		label: function() {
-			return this.name || "TinkerForge Humidity";
+			return this.name || "TinkerForge Analog Out";
 		},
 		color: 'gray',
 		icon: 'tf.png',
@@ -63,7 +52,7 @@
 
 			if (node.device) {
 				var key = $('#node-input-device').val();
-				$.getJSON('TinkerForge/' + key +"/sensors/" + 27, function(data){
+				$.getJSON('TinkerForge/' + key +"/sensors/" + 256, function(data){
 					$('#node-input-sensor').find('option').remove().end();
 					for (d in data) {
 							$('<option/>',{
@@ -80,7 +69,7 @@
 				var dev = $('#node-input-device').val();
 				if (dev) {
 					var key = dev;
-					$.getJSON('TinkerForge/' + key +"/sensors/" + 27, function(data){
+					$.getJSON('TinkerForge/' + key +"/sensors/" + 256, function(data){
 						$('#node-input-sensor').find('option').remove().end();
 						for (d in data) {
 							$('<option/>',{
