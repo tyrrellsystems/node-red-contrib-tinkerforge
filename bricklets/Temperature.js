@@ -41,20 +41,22 @@ module.exports = function(RED) {
         node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
         function(connectReason) {
             node.t = new Tinkerforge.BrickletTemperature(node.sensor, node.ipcon);
-        });
 
-        node.interval = setInterval(function(){
-            node.t.getTemperature(function(temp) {
-                node.send({
-                    topic: node.topic || 'temperature',
-                    payload: temp/100.0
-                });
-            },
-            function(err) {
-                //error
-                node.error("PTC - " + err);
-            });
-        },(node.pollTime * 1000));
+            node.interval = setInterval(function(){
+                if (node.t) {
+                    node.t.getTemperature(function(temp) {
+                        node.send({
+                            topic: node.topic || 'temperature',
+                            payload: temp/100.0
+                        });
+                    },
+                    function(err) {
+                        //error
+                        node.error("PTC - " + err);
+                    });
+                }
+            },(node.pollTime * 1000));
+        });
 
         node.on('close',function() {
             clearInterval(node.interval);

@@ -42,22 +42,24 @@ module.exports = function(RED) {
         node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
         function(connectReason) {
             node.h = new Tinkerforge.BrickletHumidity(node.sensor, node.ipcon);
-        });
 
-        node.interval = setInterval(function(){
-            node.h.getHumidity(function(humidity) {
-                node.send({
-                    topic: node.topic || 'humidity',
-                    payload: humidity/10.0
-                });
-            },
-            function(err) {
-                //error
-                if (err == 31) {
-                    node.error("Not connected");
+            node.interval = setInterval(function(){
+                if (node.h) {
+                    node.h.getHumidity(function(humidity) {
+                        node.send({
+                            topic: node.topic || 'humidity',
+                            payload: humidity/10.0
+                        });
+                    },
+                    function(err) {
+                        //error
+                        if (err == 31) {
+                            node.error("Not connected");
+                        }
+                    }); 
                 }
-            });
-        },(node.pollTime * 1000));
+            },(node.pollTime * 1000));
+        });
 
         node.on('close',function() {
             node.ipcon.disconnect();

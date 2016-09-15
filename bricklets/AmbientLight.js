@@ -42,22 +42,21 @@ module.exports = function(RED) {
         node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
         function(connectReason) {
             node.al = new Tinkerforge.BrickletAmbientLightV2(node.sensor, node.ipcon);
+            node.interval = setInterval(function(){
+                if (node.al) {
+                    node.al.getIlluminance(function(lux) {
+                        node.send({
+                            topic: node.topic || 'light',
+                            payload: lux/100.0
+                        })
+                    },
+                    function(err) {
+                        //error
+                        node.error(err);
+                    });
+                }
+            },(node.pollTime * 1000));
         });
-
-        node.interval = setInterval(function(){
-            if (node.al) {
-                node.al.getIlluminance(function(lux) {
-                    node.send({
-                        topic: node.topic || 'light',
-                        payload: lux/100.0
-                    })
-                },
-                function(err) {
-                    //error
-                    node.error(err);
-                });
-            }
-        },(node.pollTime * 1000));
 
         node.on('close',function() {
             clearInterval(node.interval);
