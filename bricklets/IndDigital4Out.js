@@ -55,7 +55,7 @@ module.exports = function(RED) {
                     }
                     
                 }
-            } else if (typeof msg.payload === "object"){
+            } else if (typeof msg.payload === "object") {
                 mask = 0;
                 if (msg.payload.hasOwnProperty("0")) {
                     if (msg.payload["0"]) {
@@ -80,6 +80,17 @@ module.exports = function(RED) {
                         mask += (1 << 3)
                     }
                 }
+            } else if (typeof msg.payload === 'string') {
+                var parts = msg.payload.split(',');
+                if (parts.length === 4) {
+                    for (var i=0; i<4; i++) {
+                        if (parts[i] == '1') {
+                            var n = (1 <<i);
+                            mask += n;
+                        }
+                     }
+                }
+
             }
             if (mask >= 0) {
                 console.log(mask.toString(2));
