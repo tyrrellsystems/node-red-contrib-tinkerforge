@@ -69,7 +69,7 @@
 					for (d in data) {
 							$('<option/>',{
 								value: data[d].uid,
-								text: data[d].uid + " - " + data[d].typeName
+								text: data[d].uid + " - " + data[d].position
 							}).appendTo('#node-input-sensor');
 						}
 				});
@@ -86,7 +86,7 @@
 						for (d in data) {
 							$('<option/>',{
 								value: data[d].uid,
-								text: data[d].uid + " - " + data[d].typeName
+								text: data[d].uid + " - " + data[d].position
 							}).appendTo('#node-input-sensor');
 						}
 					});
