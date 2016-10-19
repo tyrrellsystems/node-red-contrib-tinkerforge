@@ -27,7 +27,27 @@
 </script>
 
 <script type="text/x-red" data-help-name="TinkerForge Digital-Out">
-	<p></p>
+	<p>This node sets the outputs high or low based on the incoming message. 
+	It accepts 3 different input formats:</p>
+	<ol>
+	  <li>An object with keys, 0,1,2,3:
+	  <pre>
+{
+ "0": true,
+ "1": false,
+ "2": true,
+ "3": false
+}
+	  </pre>
+	  if a key is missing the output defaults to false.
+	  </li>
+	  <li>An array of 0/1 or false/true:
+	  <pre>[1,0,1,0]</pre>
+	  </li>
+	  <li>A CSV string
+	  <pre>"1,0,1,0"</pre>
+	  </li>
+	</ol>
 </script>
 
 <script type="text/javascript">
