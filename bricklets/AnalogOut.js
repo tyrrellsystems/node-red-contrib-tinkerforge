@@ -14,12 +14,11 @@
  * limitations under the License.
  **/
 
-
-"use strict";
 var Tinkerforge = require('tinkerforge');
 var devices = require('../lib/devices');
 
 module.exports = function(RED) {
+    "use strict";
 	function tinkerForgeAnalogOut(n) {
         RED.nodes.createNode(this,n);
         this.device = n.device;

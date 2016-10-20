@@ -26,6 +26,7 @@ Currently there are nodes for the following bricklets
  - Motion Detector Bricklet
  - Analog Out Bricklet 2.0
  - Ambient Light Bricklet 2.0
+ - Industrial Analog Out
 
 Adding more should be pretty trivial, these are just the bricks I currently 
 access to for testing
