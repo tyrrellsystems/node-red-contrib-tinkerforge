@@ -52,9 +52,9 @@ module.exports = function(RED) {
         if (node.modec === 'amps20') {
           amps = Tinkerforge.BrickletIndustrialAnalogOut.CURRENT_RANGE_0_TO_20MA;
         } else if (node.modec === 'amps24') {
-          amps = Tinkerforge.BrickletIndustrialAnalogOut.CURRENT_RANGE_0_TO_24MA
+          amps = Tinkerforge.BrickletIndustrialAnalogOut.CURRENT_RANGE_0_TO_24MA;
         }
-        node.ao.setConfiguration(volts,amps)
+        node.ao.setConfiguration(volts,amps);
         node.ao.setVoltage(0);
         node.ao.setCurrent(0);
         node.ao.enble();

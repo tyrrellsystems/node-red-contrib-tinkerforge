@@ -28,7 +28,7 @@ module.exports = function(RED) {
         this.device = n.device;
         this.sensor = n.sensor;
         this.name = n.name;
-        this.state = { "0" : false; "1": false; "2": false "3": false};
+        this.state = { "0" : false, "1": false, "2": false, "3": false};
         var node = this;
 
         node.ipcon = new Tinkerforge.IPConnection(); //devices[this.device].ipcon;
@@ -127,6 +127,7 @@ module.exports = function(RED) {
                         mask += (1 << 3);
                     }
                 }
+
             } else if (typeof msg.payload === 'string') {
                 var parts = msg.payload.split(',');
                 if (parts.length === 4) {
