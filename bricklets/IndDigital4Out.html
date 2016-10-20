@@ -21,6 +21,10 @@
     	<select id="node-input-sensor"></select>
     </div>
     <div class="form-row">
+    	<label for="node-input-topic"><i class="fa"></i> Topic Prefix</label>
+    	<input type="text" id="node-input-topic" placeholder="digiOut">
+    </div>
+    <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Temperature">
     </div>
@@ -56,7 +60,7 @@
 		defaults: {
 			device: {type: "TinkerForgeConfig", required: true},
 			sensor: {required: true},
-			//sensor: {type: "TinkerForgeSensor", requried: true},
+			topic: {type: "string"},
 			name: {}
 		},
 		outputs: 0,

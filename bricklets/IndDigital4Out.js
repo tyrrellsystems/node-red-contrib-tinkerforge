@@ -54,6 +54,21 @@ module.exports = function(RED) {
                         if (msg.payload[i]) {
                             var n = (1 << i);
                             mask += n;
+                            node.state["" + i] = true;
+                        } else {
+                            node.state["" + i] = false;
+                        }
+                    }
+                    
+                }
+            } else if (msg.topic && msg.topic.indexOf('/') != -1 && typeof msg.payload === "boolean") {
+                if (msg.topic.indexOf('/') != msg.topic.length) {
+                    var index = msg.topic.substring(msg.topic.indexOf('/')+1);
+                    mask = 0;
+                    node.state[""+ index] = msg.payload;
+                    for (var i=0; i<4; i++) {
+                        if (node.state["" + i]) {
+                            mask += (1 << i);
                         }
                     }
                     
