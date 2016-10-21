@@ -15,11 +15,12 @@
  **/
 
 
-"use strict";
 var Tinkerforge = require('tinkerforge');
 var devices = require('../lib/devices');
 
 module.exports = function(RED) {
+    "use strict";
+    
 	function tinkerForgeDigitalIn(n) {
         RED.nodes.createNode(this,n);
 
