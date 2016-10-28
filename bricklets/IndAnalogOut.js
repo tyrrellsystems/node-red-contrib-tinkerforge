@@ -21,13 +21,13 @@ var devices = require('../lib/devices');
 module.exports = function(RED) {
   "use strict";
 
-  function tinkerForgeIndAnalogOut() {
+  function tinkerForgeIndAnalogOut(n) {
     RED.nodes.createNode(this,n);
     this.device = n.device;
     this.sensor = n.sensor;
     this.name = n.name;
-    this.modev = n.modeV;
-    this.modec = n.modeA;
+    this.modev = n.modev;
+    this.modec = n.modea;
     this.control = n.control;
     var node = this;
 
@@ -57,7 +57,7 @@ module.exports = function(RED) {
         node.ao.setConfiguration(volts,amps);
         node.ao.setVoltage(0);
         node.ao.setCurrent(0);
-        node.ao.enble();
+        node.ao.enable();
     });
 
 
