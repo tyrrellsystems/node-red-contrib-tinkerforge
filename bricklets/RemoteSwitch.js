@@ -45,7 +45,7 @@ module.exports = function(RED) {
         });
 
 	node.on('input', function(msg){             
-	    if(node.ao) {                 
+	    if(node.md) {                 
 	      if (typeof msg.payload === 'number') {                     
 	        if (msg.payload == 1) {                         
 		      node.md.switchSocketA(node.md.housecode, node.md.receivercode, Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_ON);                     
