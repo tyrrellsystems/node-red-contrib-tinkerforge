@@ -11,7 +11,7 @@
   limitations under the License.
 -->
 
-<script type="text/x-red" data-template-name="TinkerForge RemoteSwitch">
+<script type="text/x-red" data-template-name="RemoteSwitch Type A">
 	<div class="form-row">
         <label for="node-input-device"><i class="fa fa-tasks"></i> Device</label>
         <input type="text" id="node-input-device">
@@ -38,13 +38,13 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="TinkerForge RemoteSwitch Type A">
+<script type="text/x-red" data-help-name="RemoteSwitch Type A">
   <p>A node to switch Wireless Switch based on the TinkerForge RemoteSwitch Bricklet</p>
   <p>The node takes a Tinkerforge device and a sensor as configuration parameters.</p>
 </script>
 
 <script type="text/javascript">
-	RED.nodes.registerType("TinkerForge RemoteSwitch",{
+	RED.nodes.registerType("RemoteSwitch Type A",{
 		category: 'TinkerForge',
 		defaults: {
 			device: {type: "TinkerForgeConfig", required: true},
@@ -58,7 +58,7 @@
 		outputs: 0,
 		inputs: 1,
 		label: function() {
-			return this.name || "TinkerForge RemoteSwitch Type A";
+			return this.name || "RemoteSwitch Type A";
 		},
 		color: 'gray',
 		icon: 'tf.png',
