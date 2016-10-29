@@ -62,5 +62,5 @@ module.exports = function(RED) {
         });
     }
 
-    RED.nodes.registerType('TinkerForge RemoteSwitch A', tinkerForgeRemoteSwitchA);
+    RED.nodes.registerType('RemoteSwitch Type A', tinkerForgeRemoteSwitchA);
 }
