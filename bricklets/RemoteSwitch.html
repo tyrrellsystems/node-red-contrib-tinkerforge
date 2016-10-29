@@ -21,6 +21,14 @@
     	<select id="node-input-sensor"></select>
     </div>
     <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> House Code</label>
+        <input type="text" id="node-input-topic" placeholder="HouseCode">
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> Receiver Code</label>
+        <input type="text" id="node-input-topic" placeholder="ReceiverCode">
+    </div>
+    <div class="form-row">
         <label for="node-input-topic"><i class="fa fa-tasks"></i> Topic</label>
         <input type="text" id="node-input-topic" placeholder="Topic">
     </div>
@@ -30,8 +38,8 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="TinkerForge Motion">
-  <p>A node to switch Wireless Switches based on the TinkerForge RemoteSwitch Bricklet</p>
+<script type="text/x-red" data-help-name="TinkerForge RemoteSwitch Type A">
+  <p>A node to switch Wireless Switch based on the TinkerForge RemoteSwitch Bricklet</p>
   <p>The node takes a Tinkerforge device and a sensor as configuration parameters.</p>
 </script>
 
@@ -42,14 +50,15 @@
 			device: {type: "TinkerForgeConfig", required: true},
 			sensor: {required: true},
 			//sensor: {type: "TinkerForgeSensor", required: true},
-			mode: {required: true},
+			housecode: {required: true},
+			receivercode: {required: true},
 			name: {},
 			topic: {}
 		},
 		outputs: 0,
 		inputs: 1,
 		label: function() {
-			return this.name || "TinkerForge RemoteSwitch";
+			return this.name || "TinkerForge RemoteSwitch Type A";
 		},
 		color: 'gray',
 		icon: 'tf.png',
