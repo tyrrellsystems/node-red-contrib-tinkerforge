@@ -47,5 +47,5 @@ module.exports = function(RED) {
         });
     }
 
-    RED.nodes.registerType('TinkerForge Motion', tinkerForgeMovement);
+    RED.nodes.registerType('TinkerForge RemoteSwitch', tinkerForgeRemoteSwitch);
 }
