@@ -20,11 +20,13 @@ var devices = require('../lib/devices');
 
 module.exports = function(RED) { 
 
-	function tinkerForgeRemoteSwitch(n) {
+	function tinkerForgeRemoteSwitchA(n) {
         RED.nodes.createNode(this,n);
         this.device = n.device;
         this.sensor = n.sensor;
         this.name = n.name;
+	    this.housecode = n.housecode;
+	    this.receivercode = n.receivercode;
         this.topic = n.topic;
         var node = this;
 
@@ -42,10 +44,23 @@ module.exports = function(RED) {
             node.md = new Tinkerforge.BrickletRemoteSwitch(node.sensor, node.ipcon);
         });
 
+	node.on('input', function(msg){             
+	    if(node.ao) {                 
+	      if (typeof msg.payload === 'number') {                     
+	        if (msg.payload == 1) {                         
+		      node.md.switchSocketA(node.md.housecode, node.md.receivercode, Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_ON);                     
+		    }
+		    else {
+	          node.md.switchSocketA(node.md.housecode, node.md.receivercode, Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_OFF);
+ 		    }                 
+	      }             
+	    }         
+    });
+
         node.on('close',function() {
             node.ipcon.disconnect();
         });
     }
 
-    RED.nodes.registerType('TinkerForge RemoteSwitch', tinkerForgeRemoteSwitch);
+    RED.nodes.registerType('TinkerForge RemoteSwitch A', tinkerForgeRemoteSwitchA);
 }
