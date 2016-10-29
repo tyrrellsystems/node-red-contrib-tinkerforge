@@ -1,0 +1,106 @@
+<!--
+  Copyright 2016 IBM Corp.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/x-red" data-template-name="RemoteSwitch Type A">
+	<div class="form-row">
+        <label for="node-input-device"><i class="fa fa-tasks"></i> Device</label>
+        <input type="text" id="node-input-device">
+    </div>
+    <div class="form-row">
+    	<label for="node-input-sensor"><i class="fa"></i> Sensor</label>
+    	<select id="node-input-sensor"></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> Address</label>
+        <input type="text" id="node-input-topic" placeholder="Address">
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> Unit</label>
+        <input type="text" id="node-input-topic" placeholder="Unit">
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> Topic</label>
+        <input type="text" id="node-input-topic" placeholder="Topic">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Humidity">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="RemoteSwitch Type A">
+  <p>A node to switch Wireless Switch based on the TinkerForge RemoteSwitch Bricklet</p>
+  <p>The node takes a Tinkerforge device and a sensor as configuration parameters.</p>
+</script>
+
+<script type="text/javascript">
+	RED.nodes.registerType("RemoteSwitch Type B",{
+		category: 'TinkerForge',
+		defaults: {
+			device: {type: "TinkerForgeConfig", required: true},
+			sensor: {required: true},
+			//sensor: {type: "TinkerForgeSensor", required: true},
+			address: {required: true},
+			unit: {required: true},
+			name: {},
+			topic: {}
+		},
+		outputs: 0,
+		inputs: 1,
+		label: function() {
+			return this.name || "RemoteSwitch Type B";
+		},
+		color: 'gray',
+		icon: 'tf.png',
+		oneditprepare: function() {
+			var node = this;
+
+			if (node.device) {
+				var key = $('#node-input-device').val();
+				$.getJSON('TinkerForge/' + key +"/sensors/" + 235, function(data){
+					$('#node-input-sensor').find('option').remove().end();
+					for (d in data) {
+							$('<option/>',{
+								value: data[d].uid,
+								text: data[d].uid + " - " + data[d].position
+							}).appendTo('#node-input-sensor');
+						}
+				});
+			} else {
+				console.log("no device");
+			}
+
+			$('#node-input-device').change(function(){
+				var dev = $('#node-input-device').val();
+				if (dev) {
+					var key = dev;
+					$.getJSON('TinkerForge/' + key +"/sensors/" + 235, function(data){
+						$('#node-input-sensor').find('option').remove().end();
+						for (d in data) {
+							$('<option/>',{
+								value: data[d].uid,
+								text: data[d].uid + " - " + data[d].position
+							}).appendTo('#node-input-sensor');
+						}
+					});
+				} else {
+					console.log("no device");
+				}
+			});
+
+			if (node.sensor) {
+				$('#node-input-sensor').val(node.sensor);
+			}
+		}
+	});
+</script>
