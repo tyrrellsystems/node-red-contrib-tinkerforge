@@ -48,10 +48,10 @@ module.exports = function(RED) {
 	    if(node.md) {                 
 	      if (typeof msg.payload === 'number') {                     
 	        if (msg.payload == 1) {                         
-		  node.md.switchSocketB(node.md.address, node.md.unit, Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_ON);
+		  node.md.switchSocketB(node.address, node.unit, Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_ON);
 		}
 		else {
-	          node.md.switchSocketB(node.md.address, node.md.unit, Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_OFF);
+	          node.md.switchSocketB(node.address, node.unit, Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_OFF);
  		}
 	      }             
 	    }         
