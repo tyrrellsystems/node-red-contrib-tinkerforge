@@ -36,7 +36,7 @@
       "digiin": "bricklets/IndDigital4In.js",
       "analogout": "bricklets/AnalogOut.js",
       "indanalogout": "bricklets/indAnalogOut.js",
-      "remoteswitcha": "bricklets/RemoteSwitch.js",
+      "remoteswitcha": "bricklets/RemoteSwitch.js"
     }
   }
 }
