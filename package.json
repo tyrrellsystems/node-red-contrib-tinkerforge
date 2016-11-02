@@ -37,7 +37,6 @@
       "analogout": "bricklets/AnalogOut.js",
       "indanalogout": "bricklets/indAnalogOut.js",
       "remoteswitcha": "bricklets/RemoteSwitch.js",
-      "remoteswitchb": "bricklets/RemoteSwitchB.js"
     }
   }
 }
