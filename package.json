@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-tinkerforge",
-  "version": "0.0.9",
+  "version": "0.0.12",
   "description": "Node-RED nodes to access Tinkerforge sensors",
   "dependencies": {
     "body-parser": "^1.15.1",
@@ -35,8 +35,7 @@
       "temperature": "bricklets/Temperature.js",
       "digiin": "bricklets/IndDigital4In.js",
       "analogout": "bricklets/AnalogOut.js",
-      "indanalogout": "bricklets/indAnalogOut.js",
-      "remoteswitcha": "bricklets/RemoteSwitch.js"
+      "indanalogout": "bricklets/IndAnalogOut.js"
     }
   }
 }

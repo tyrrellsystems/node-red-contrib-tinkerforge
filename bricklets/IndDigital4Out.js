@@ -31,6 +31,8 @@ module.exports = function(RED) {
         this.state = { "0" : false, "1": false, "2": false, "3": false};
         var node = this;
 
+        this.queue = [];
+
         node.ipcon = new Tinkerforge.IPConnection(); //devices[this.device].ipcon;
         node.ipcon.setAutoReconnect(true);
         var devs = devices.getDevices();
@@ -43,9 +45,18 @@ module.exports = function(RED) {
         node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
         function(connectReason) {
             node.ido4 = new Tinkerforge.BrickletIndustrialDigitalOut4(node.sensor, node.ipcon);
+            for (var i=0; i<node.queue.length; i++) {
+                node.emit('input', node.queue[i]);
+            }
         });
 
         node.on('input', function(msg){
+
+            if (!node.ido4) {
+                node.queue.push(msg);
+                return;
+            }
+
             var mask = -1;
             if (Array.isArray(msg.payload)) {
                 if (msg.payload.length == 4) {
