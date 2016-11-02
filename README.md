@@ -1,10 +1,10 @@
-A set of Node-RED nodes to access Tinkerforge bricklets
--------------------------------------------------------
+#A set of Node-RED nodes to access Tinkerforge bricklets
+
 These nodes make use of [Tinkerforge's][1] [javascript][2] library to connect 
 to a local brickd instance or to a remote instance (via Ethernet/WiFi brick)
 
-Install
-=======
+##Install
+
 From npm
 
 npm install node-red-contrib-tinkerforge
@@ -13,8 +13,8 @@ or to from the git head stream
 
 npm install hardillb/node-red-contrib-tinkerforge
 
-Supported Bricklets
-===================
+##Supported Bricklets
+
 Currently there are nodes for the following bricklets
 
  - Humidity Bricklet
@@ -32,8 +32,7 @@ Currently there are nodes for the following bricklets
 Adding more should be pretty trivial, these are just the bricks I currently 
 access to for testing
 
-License
-=======
+##License
 Apache 2.0
 
 
