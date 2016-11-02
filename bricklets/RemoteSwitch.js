@@ -20,13 +20,14 @@ var devices = require('../lib/devices');
 
 module.exports = function(RED) { 
 
-	function tinkerForgeRemoteSwitchA(n) {
+	function tinkerForgeRemoteSwitch(n) {
         RED.nodes.createNode(this,n);
         this.device = n.device;
         this.sensor = n.sensor;
         this.name = n.name;
-	    this.housecode = n.housecode;
-	    this.receivercode = n.receivercode;
+        this.mode = n.mode;
+	    this.addr1 = n.addr1;
+	    this.addr2 = n.addr2;
         this.topic = n.topic;
         var node = this;
 
@@ -47,13 +48,17 @@ module.exports = function(RED) {
 	node.on('input', function(msg){             
 	    if(node.md) {                 
 	      if (typeof msg.payload === 'number') {                     
-	        if (msg.payload == 1) {                         
-		      node.md.switchSocketA(node.md.housecode, node.md.receivercode, Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_ON);                     
+	        if (msg.payload == 1) {
+                      var switchto = Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_ON;
 		    }
 		    else {
-	          node.md.switchSocketA(node.md.housecode, node.md.receivercode, Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_OFF);
- 		    }                 
-	      }             
+                      var switchto = Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_OFF;
+ 		    }
+                switch (node.mode) {
+                case 'A':node.md.switchSocketA(node.addr1, node.addr2, switchto);break;
+                case 'B':node.md.switchSocketB(node.addr1, node.addr2, dwitchto);break;
+                }
+	      }
 	    }         
     });
 
@@ -62,5 +67,5 @@ module.exports = function(RED) {
         });
     }
 
-    RED.nodes.registerType('RemoteSwitch Type A', tinkerForgeRemoteSwitchA);
+    RED.nodes.registerType('Tinkerforge RemoteSwitch', tinkerForgeRemoteSwitch);
 }

@@ -11,7 +11,7 @@
   limitations under the License.
 -->
 
-<script type="text/x-red" data-template-name="RemoteSwitch Type A">
+<script type="text/x-red" data-template-name="Tinkerforge RemoteSwitch">
 	<div class="form-row">
         <label for="node-input-device"><i class="fa fa-tasks"></i> Device</label>
         <input type="text" id="node-input-device">
@@ -21,12 +21,16 @@
     	<select id="node-input-sensor"></select>
     </div>
     <div class="form-row">
-        <label for="node-input-topic"><i class="fa fa-tasks"></i> House Code</label>
-        <input type="text" id="node-input-housecode" placeholder="HouseCode">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> House Code/Address</label>
+        <input type="text" id="node-input-mode" placeholder="Mode">
     </div>
     <div class="form-row">
-        <label for="node-input-topic"><i class="fa fa-tasks"></i> Receiver Code</label>
-        <input type="text" id="node-input-receivercode" placeholder="ReceiverCode">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> House Code/Address</label>
+        <input type="text" id="node-input-addr1" placeholder="HouseCode/Address">
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> Receiver Code/Unit</label>
+        <input type="text" id="node-input-addr2" placeholder="ReceiverCode/Unit">
     </div>
     <div class="form-row">
         <label for="node-input-topic"><i class="fa fa-tasks"></i> Topic</label>
@@ -38,27 +42,28 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="RemoteSwitch Type A">
+<script type="text/x-red" data-help-name="Tinkerforge RemoteSwitch">
   <p>A node to switch Wireless Switch based on the TinkerForge RemoteSwitch Bricklet</p>
   <p>The node takes a Tinkerforge device and a sensor as configuration parameters.</p>
 </script>
 
 <script type="text/javascript">
-	RED.nodes.registerType("RemoteSwitch Type A",{
+	RED.nodes.registerType("Tinkerforge RemoteSwitch",{
 		category: 'TinkerForge',
 		defaults: {
 			device: {type: "TinkerForgeConfig", required: true},
 			sensor: {required: true},
 			//sensor: {type: "TinkerForgeSensor", required: true},
-			housecode: {required: true},
-			receivercode: {required: true},
+			mode: {required: true},
+			addr1: {required: true},
+			addr2: {required: true},
 			name: {},
 			topic: {}
 		},
 		outputs: 0,
 		inputs: 1,
 		label: function() {
-			return this.name || "RemoteSwitch Type A";
+			return this.name || "Tinkerforge RemoteSwitch";
 		},
 		color: 'gray',
 		icon: 'tf.png',
