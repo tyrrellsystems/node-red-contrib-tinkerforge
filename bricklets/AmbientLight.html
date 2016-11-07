@@ -76,6 +76,18 @@
 						$('#node-input-sensor').val(node.sensor);
 					}
 				});
+				$.getJSON('TinkerForge/' + key +"/sensors/" + 21, function(data){
+					$('#node-input-sensor').find('option').remove().end();
+					for (d in data) {
+						$('<option/>',{
+							value: data[d].uid,
+							text: data[d].uid + " - " + data[d].position
+						}).appendTo('#node-input-sensor');
+					}
+					if (node.sensor) {
+						$('#node-input-sensor').val(node.sensor);
+					}
+				});
 			} else {
 				console.log("no device");
 			}

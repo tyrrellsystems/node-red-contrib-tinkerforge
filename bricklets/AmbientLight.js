@@ -56,6 +56,23 @@ module.exports = function(RED) {
                     });
                 }
             },(node.pollTime * 1000));
+            if (!node.al) {
+              node.al = new Tinkerforge.BrickletAmbientLight(node.sensor, node.ipcon);
+              node.interval = setInterval(function(){
+                  if (node.al) {
+                      node.al.getIlluminance(function(lux) {
+                          node.send({
+                              topic: node.topic || 'light',
+                              payload: lux/100.0
+                          })
+                      },
+                      function(err) {
+                          //error
+                          node.error(err);
+                      });
+                  }
+              },(node.pollTime * 1000));
+            }
         });
 
         node.on('close',function() {
