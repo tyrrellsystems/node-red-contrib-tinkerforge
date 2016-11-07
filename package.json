@@ -35,7 +35,7 @@
       "temperature": "bricklets/Temperature.js",
       "digiin": "bricklets/IndDigital4In.js",
       "analogout": "bricklets/AnalogOut.js",
-      "indanalogout": "bricklets/indAnalogOut.js",
+      "indanalogout": "bricklets/IndAnalogOut.js",
       "remoteswitch": "bricklets/RemoteSwitch.js"
     }
   }
