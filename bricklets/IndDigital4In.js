@@ -45,7 +45,7 @@ module.exports = function(RED) {
         function(connectReason) {
             node.idi4 = new Tinkerforge.BrickletIndustrialDigitalIn4(node.sensor, node.ipcon);
             //((1 << 0) + (1 << 1) + (1 << 2) + (1 << 3))
-            node.idi4.setInterrupt( 15);
+            node.idi4.setInterrupt(15);
             node.idi4.on(Tinkerforge.BrickletIndustrialDigitalIn4.CALLBACK_INTERRUPT, 
                 function(interupMask, valueMask){
                     // console.log("int mask - " + interupMask.toString(2));
