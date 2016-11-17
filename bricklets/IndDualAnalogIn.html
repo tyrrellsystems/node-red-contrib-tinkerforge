@@ -21,6 +21,10 @@
     	<select id="node-input-sensor"></select>
     </div>
     <div class="form-row">
+        <label for="node-input-pollTime"><i class="fa fa-clock"></i> Poll Interval</label>
+        <input type="number" id="node-input-pollTime" >
+    </div>
+    <div class="form-row">
         <label for="node-input-topic"><i class="fa fa-tasks"></i> Topic Prefix</label>
         <input type="text" id="node-input-topic" placeholder="Topic">
     </div>
@@ -45,6 +49,7 @@
     defaults: {
       device: {type: "TinkerForgeConfig", required: true},
       sensor: {required: true},
+      pollTime: {value: "10", required: true},
       //sensor: {type: "TinkerForgeSensor", requried: true},
       name: {},
       topic: {}
