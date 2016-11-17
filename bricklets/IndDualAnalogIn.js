@@ -46,7 +46,7 @@ module.exports = function(RED) {
         	node.interval = setInterval(function(){
         		node.idai.getVoltage(1,function (volage){
         			var msg = {
-        				topic: (topic || "") + "/1",
+        				topic: (node.topic || "") + "/1",
         				payload: volage * 1000
         			};
         			node.send(msg);
@@ -58,7 +58,7 @@ module.exports = function(RED) {
         		});
         		node.idai.getVoltage(2,function (volage){
         			var msg = {
-        				topic: (topic || "") + "/2",
+        				topic: (node.topic || "") + "/2",
         				payload: volage * 1000
         			};
         			node.send(msg);
