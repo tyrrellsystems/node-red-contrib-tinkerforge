@@ -44,10 +44,10 @@ module.exports = function(RED) {
         	node.idai = new Tinkerforge.BrickletIndustrialDualAnalogIn(node.sensor, node.ipcon);
 
         	node.interval = setInterval(function(){
-        		node.idai.getVoltage(1,function (volage){
+        		node.idai.getVoltage(1,function (voltage){
         			var msg = {
         				topic: (node.topic || "") + "/1",
-        				payload: volage * 1000
+        				payload: voltage / 1000
         			};
         			node.send(msg);
 
@@ -56,10 +56,10 @@ module.exports = function(RED) {
                         node.error("Not connected");
                     }
         		});
-        		node.idai.getVoltage(2,function (volage){
+        		node.idai.getVoltage(2,function (voltage){
         			var msg = {
         				topic: (node.topic || "") + "/2",
-        				payload: volage * 1000
+        				payload: voltage / 1000
         			};
         			node.send(msg);
         		}, function(err){
