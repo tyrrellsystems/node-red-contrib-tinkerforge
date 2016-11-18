@@ -21,13 +21,14 @@ var devices = require('../lib/devices');
 module.exports = function(RED) {
     "use strict";
     
-	function tinkerForgeIndDualAnalogIn(n) {
+    function tinkerForgeIndDualAnalogIn(n) {
         RED.nodes.createNode(this,n);
         this.device = n.device;
         this.sensor = n.sensor;
         this.name = n.name;
         this.topic = n.topic;
         this.pollTime = n.pollTime;
+        this.state = [0,0];
         var node = this;
 
         node.ipcon = new Tinkerforge.IPConnection(); //devices[this.device].ipcon;
@@ -41,57 +42,47 @@ module.exports = function(RED) {
 
         node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
         function(connectReason) {
-        	node.idai = new Tinkerforge.BrickletIndustrialDualAnalogIn(node.sensor, node.ipcon);
+            node.idai = new Tinkerforge.BrickletIndustrialDualAnalogIn(node.sensor, node.ipcon);
 
-        	// node.interval = setInterval(function(){
+            node.interval = setInterval(function(){
+                node.idai.getVoltage(0,
+                    function (voltage){
+                        var msg = {
+                            topic: (node.topic || "") + "/0",
+                            payload: voltage / 1000
+                        };
+                        node.send(msg);
 
-        	// 	node.idai.getVoltage(1,function (voltage){
-        	// 		var msg = {
-        	// 			topic: (node.topic || "") + "/1",
-        	// 			payload: voltage / 1000
-        	// 		};
-        	// 		node.send(msg);
+                        node.idai.getVoltage(1,
+                            function (voltage){
+                                var msg = {
+                                    topic: (node.topic || "") + "/1",
+                                    payload: voltage / 1000
+                                };
+                                node.send(msg);
+                            }, function(err){
+                                if (err == 31) {
+                                    node.error("Not connected");
+                                } else {
+                                    node.error("Other err " + err );
+                                }
+                            }
+                        );
 
-        	// 	}, function(err){
-        	// 		if (err == 31) {
-         //                node.error("Not connected");
-         //            }
-        	// 	});
-
-        	// 	node.idai.getVoltage(2,function (voltage){
-        	// 		var msg = {
-        	// 			topic: (node.topic || "") + "/2",
-        	// 			payload: voltage / 1000
-        	// 		};
-        	// 		node.send(msg);
-        	// 	}, function(err){
-        	// 		if (err == 31) {
-         //                node.error("Not connected");
-         //            } else {
-         //                node.error("Other err " + err );
-         //            }
-        	// 	});
-
-        	// },(node.pollTime * 1000));
-
-            node.idai.setVoltageCallbackPeriod(1, node.pollTime * 1000);
-            node.idai.setVoltageCallbackPeriod(2, node.pollTime * 1000);
-
-            node.idai.on(Tinkerforge.BrickletIndustrialDualAnalogIn.CALLBACK_VOLTAGE,
-                function(channel, voltage) {
-                    var msg = {
-                        topic: (node.topic || "") + "/" + channel,
-                        payload: voltage / 1000
-                    };
-                    node.send(msg);
-                });
+                    }, function(err){
+                        if (err == 31) {
+                            node.error("Not connected");
+                        }
+                    }
+                );
+            },(node.pollTime * 1000));
 
         });
 
 
         node.on('close',function() {
             node.ipcon.disconnect();
-            //clearInterval(node.interval);
+            clearInterval(node.interval);
         });
     };
 

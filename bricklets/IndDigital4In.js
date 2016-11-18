@@ -80,6 +80,37 @@ module.exports = function(RED) {
                     }
                     node.currentState = valueMask;
             });
+
+            node.ida4.getValue(function(valueMask){
+                if (valueMask & 1) {
+                    node.send({
+                        topic: node.topic + "/0",
+                        payload: (valueMask & 1)  != 0
+                    });
+                }
+
+                if (valueMask & 2) {
+                    node.send({
+                        topic: node.topic + "/1",
+                        payload: (valueMask & 2) != 0
+                    });
+                }
+
+                if (valueMask & 4) {
+                    node.send({
+                        topic: node.topic + "/2",
+                        payload: (valueMask & 4) != 0
+                    });
+                }
+
+                if (valueMask & 8) {
+                    node.send({
+                        topic: node.topic + "/3",
+                        payload: (valueMask & 8) != 0
+                    });
+                }
+                node.currentState = valueMask;
+            })
         });
 
 
