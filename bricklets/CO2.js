@@ -68,4 +68,3 @@ module.exports = function(RED) {
 
     RED.nodes.registerType('TinkerForge CO2', tinkerForgeCO2);
 };
-};
