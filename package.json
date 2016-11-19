@@ -37,7 +37,7 @@
       "analogout": "bricklets/AnalogOut.js",
       "indanalogout": "bricklets/IndAnalogOut.js",
       "remoteswitch": "bricklets/RemoteSwitch.js",
-      "remoteswitch": "bricklets/Moisture.js"
+      "moisture": "bricklets/Moisture.js"
     }
   }
 }
