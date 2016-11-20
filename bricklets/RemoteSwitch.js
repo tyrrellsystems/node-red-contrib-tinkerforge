@@ -57,6 +57,7 @@ module.exports = function(RED) {
                 switch (node.mode) {
                 case 'A':node.md.switchSocketA(node.addr1, node.addr2, switchto);break;
                 case 'B':node.md.switchSocketB(node.addr1, node.addr2, switchto);break;
+                case 'C':node.md.switchSocketC(node.addr1, node.addr2, switchto);break;
                 }
 	      }
 	    }         
