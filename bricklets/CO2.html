@@ -10,8 +10,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<script type="text/x-red" data-template-name="TinkerForge IndAnalogOut">
-  <div class="form-row">
+
+<script type="text/x-red" data-template-name="TinkerForge CO2">
+<div class="form-row">
         <label for="node-input-device"><i class="fa fa-tasks"></i> Device</label>
         <input type="text" id="node-input-device" >
     </div>
@@ -20,56 +21,42 @@
       <select id="node-input-sensor"></select>
     </div>
     <div class="form-row">
-      <label for="node-input-modev"><i class="fa"></i> Voltage Mode</label>
-      <select id="node-input-modev">
-        <option value="volts5">Voltage 0-5v</option>
-        <option value="volts10">Voltage 0-10v</option>
-      </select>
-    </div>
-    <div>
-      <label for="node-input-modec"><i class="fa"</i> Current Mode</label>
-      <select id="node-input-modec">
-        <option value="amps4">Current 4-20ma</option>
-        <option value="amps20">Current 0-20ma</option>
-        <option value="amps24">Current 0-24ma</option>
-      </select>
+        <label for="node-input-pollTime"><i class="fa fa-clock"></i> Poll Interval</label>
+        <input type="number" id="node-input-pollTime" >
     </div>
     <div class="form-row">
-      <label for="node-input-control"><i class="fa"></i> Contol</label>
-      <select id="node-input-control">
-        <option value="volts">Volts</option>
-        <option value="amps">Amps</option>
-      </select>
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> Topic</label>
+        <input type="text" id="node-input-topic" placeholder="Topic">
     </div>
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Industrial AnalogOut">
+        <input type="text" id="node-input-name" placeholder="CO2">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="TinkerForge IndAnalogOut">
-  <p>This node controls the Industial Analog Out node</p>
-  <p>You need to configure the voltage and current range and also which
-  of these the input messages will change.</p>
+<script type="text/x-red" data-help-name="TinkerForge CO2">
+  <p>A node to trigger messages based on the TinkerForge CO2 Bricklet</p>
+  <p>The node takes a Tinkerforge device, a sensor and a poll interval as configuration parameters.</p>
+  <p>It outputs a message with relative humidity value as a value between 0 and 100 in the payload</p>
 </script>
 
 <script type="text/javascript">
-  RED.nodes.registerType("TinkerForge IndAnalogOut",{
+  RED.nodes.registerType("TinkerForge CO2",{
     category: 'TinkerForge',
-    defaults:{
+    defaults: {
       device: {type: "TinkerForgeConfig", required: true},
       sensor: {required: true},
-      modev: {value: 'volts5', required: true},
-      modec: {value: 'amps4', required: true},
-      control: {value: 'volts', required: true},
-      name: {}
+      pollTime: {value: "10", required: true},
+      //sensor: {type: "TinkerForgeSensor", requried: true},
+      name: {},
+      topic: {}
     },
-    outputs: 0,
-    inputs: 1,
+    outputs: 1,
+    inputs: 0,
     label: function() {
-      return this.name || "TinkerForge Ind Analog Out";
+      return this.name || "TinkerForge CO2";
     },
-    paletteLabel: 'Ind Analog Out',
+    paletteLabel: 'CO2',
     color: 'gray',
     icon: 'tf.png',
     oneditprepare: function() {
@@ -77,14 +64,17 @@
 
       if (node.device) {
         var key = $('#node-input-device').val();
-        $.getJSON('TinkerForge/' + key +"/sensors/" + 258, function(data){
+        $.getJSON('TinkerForge/' + key +"/sensors/" + 262, function(data){
           $('#node-input-sensor').find('option').remove().end();
           for (d in data) {
-              $('<option/>',{
-                value: data[d].uid,
-                text: data[d].uid + " - " + data[d].position
-              }).appendTo('#node-input-sensor');
-            }
+            $('<option/>',{
+              value: data[d].uid,
+              text: data[d].uid + " - " + data[d].position
+            }).appendTo('#node-input-sensor');
+          }
+          if (node.sensor) {
+            $('#node-input-sensor').val(node.sensor);
+          }
         });
       } else {
         console.log("no device");
@@ -94,13 +84,16 @@
         var dev = $('#node-input-device').val();
         if (dev) {
           var key = dev;
-          $.getJSON('TinkerForge/' + key +"/sensors/" + 258, function(data){
+          $.getJSON('TinkerForge/' + key +"/sensors/" + 262, function(data){
             $('#node-input-sensor').find('option').remove().end();
             for (d in data) {
               $('<option/>',{
                 value: data[d].uid,
                 text: data[d].uid + " - " + data[d].position
               }).appendTo('#node-input-sensor');
+            }
+            if (node.sensor) {
+              $('#node-input-sensor').val(node.sensor);
             }
           });
         } else {

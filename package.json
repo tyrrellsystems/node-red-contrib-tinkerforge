@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-tinkerforge",
-  "version": "0.0.12",
+  "version": "0.0.19",
   "description": "Node-RED nodes to access Tinkerforge sensors",
   "dependencies": {
     "body-parser": "^1.15.1",
@@ -29,15 +29,19 @@
       "motion": "bricklets/Motion.js",
       "humidity": "bricklets/Humidity.js",
       "ptc": "bricklets/PTC.js",
-      "digiout": "bricklets/IndDigital4Out.js",
-      "ambilight": "bricklets/AmbientLight.js",
-      "ledstrip": "bricklets/LEDStrip.js",
       "temperature": "bricklets/Temperature.js",
+      "co2": "bricklets/CO2.js",
+      "ambilight": "bricklets/AmbientLight.js",
       "digiin": "bricklets/IndDigital4In.js",
+      "inddualanalogin": "bricklets/IndDualAnalogIn.js",
       "analogout": "bricklets/AnalogOut.js",
       "indanalogout": "bricklets/IndAnalogOut.js",
       "remoteswitch": "bricklets/RemoteSwitch.js",
-      "moisture": "bricklets/Moisture.js"
+      "moisture": "bricklets/Moisture.js",
+      "ledstrip": "bricklets/LEDStrip.js",
+      "digiout": "bricklets/IndDigital4Out.js",
+      "indanalogout": "bricklets/IndAnalogOut.js",
+      "dualrealy":"bricklets/DualRelay.js"
     }
   }
 }

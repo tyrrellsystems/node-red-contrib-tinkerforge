@@ -45,7 +45,7 @@ module.exports = function(RED) {
         function(connectReason) {
             node.idi4 = new Tinkerforge.BrickletIndustrialDigitalIn4(node.sensor, node.ipcon);
             //((1 << 0) + (1 << 1) + (1 << 2) + (1 << 3))
-            node.idi4.setInterrupt( 15);
+            node.idi4.setInterrupt(15);
             node.idi4.on(Tinkerforge.BrickletIndustrialDigitalIn4.CALLBACK_INTERRUPT, 
                 function(interupMask, valueMask){
                     // console.log("int mask - " + interupMask.toString(2));
@@ -80,6 +80,37 @@ module.exports = function(RED) {
                     }
                     node.currentState = valueMask;
             });
+
+            node.ida4.getValue(function(valueMask){
+                if (valueMask & 1) {
+                    node.send({
+                        topic: node.topic + "/0",
+                        payload: (valueMask & 1)  != 0
+                    });
+                }
+
+                if (valueMask & 2) {
+                    node.send({
+                        topic: node.topic + "/1",
+                        payload: (valueMask & 2) != 0
+                    });
+                }
+
+                if (valueMask & 4) {
+                    node.send({
+                        topic: node.topic + "/2",
+                        payload: (valueMask & 4) != 0
+                    });
+                }
+
+                if (valueMask & 8) {
+                    node.send({
+                        topic: node.topic + "/3",
+                        payload: (valueMask & 8) != 0
+                    });
+                }
+                node.currentState = valueMask;
+            })
         });
 
 

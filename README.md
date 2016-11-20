@@ -28,6 +28,9 @@ Currently there are nodes for the following bricklets
  - Ambient Light Bricklet 2.0
  - Industrial Analog Out
  - Remote Switch Bricklet
+ - Industrial Analog Out Bricklet
+ - Industrial Dual Analog In Bricklet
+ - Dual Relay Bricklet
 
 Adding more should be pretty trivial, these are just the bricks I currently 
 access to for testing
