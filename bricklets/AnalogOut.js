@@ -44,10 +44,12 @@ module.exports = function(RED) {
         node.on('input', function(msg){
             if(node.ao) {
                 if (typeof msg.payload === 'number') {
-                    if (msg.payload >=0 && msg.parts <= 12) {
+                    if (msg.payload >=0 && msg.payload <= 12) {
                         var v = Math.round(msg.payload * 1000);
                         node.ao.setOutputVoltage(v);
                     }
+                } else {
+                    node.error("Payload not a number");
                 }
             }
         });
