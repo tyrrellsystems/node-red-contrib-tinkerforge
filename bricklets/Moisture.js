@@ -20,9 +20,9 @@ var Tinkerforge = require('tinkerforge');
 var devices = require('../lib/devices');
 
 module.exports = function(RED) {
-	function tinkerForgeAmbientLight(n) {
-        RED.nodes.createNode(this,n);
 
+    function tinkerForgeMoisture(n) {
+        RED.nodes.createNode(this,n);
         this.device = n.device;
         this.sensor = n.sensor;
         this.name = n.name;
@@ -38,51 +38,34 @@ module.exports = function(RED) {
                 node.warn("couldn't connect");
             }
         });
-
+        
         node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
         function(connectReason) {
-            node.al = new Tinkerforge.BrickletAmbientLightV2(node.sensor, node.ipcon);
-            if (!node.al) {
-              node.al = new Tinkerforge.BrickletAmbientLight(node.sensor, node.ipcon);
-            }
+            node.h = new Tinkerforge.BrickletMoisture(node.sensor, node.ipcon);
+
             node.interval = setInterval(function(){
-                if (node.al) {
-                    node.al.getIlluminance(function(lux) {
+                if (node.h) {
+                    node.h.getMoistureValue(function(Moisture) {
                         node.send({
-                            topic: node.topic || 'light',
-                            payload: lux/100.0
-                        })
+                            topic: node.topic || 'Moisture',
+                            payload: Moisture
+                        });
                     },
                     function(err) {
                         //error
-                        node.error(err);
-                    });
+                        if (err == 31) {
+                            node.error("Not connected");
+                        }
+                    }); 
                 }
             },(node.pollTime * 1000));
-            // if (!node.al) {
-            //   node.al = new Tinkerforge.BrickletAmbientLight(node.sensor, node.ipcon);
-            //   node.interval = setInterval(function(){
-            //       if (node.al) {
-            //           node.al.getIlluminance(function(lux) {
-            //               node.send({
-            //                   topic: node.topic || 'light',
-            //                   payload: lux/100.0
-            //               })
-            //           },
-            //           function(err) {
-            //               //error
-            //               node.error(err);
-            //           });
-            //       }
-            //   },(node.pollTime * 1000));
-            // }
         });
 
         node.on('close',function() {
-            clearInterval(node.interval);
             node.ipcon.disconnect();
+            clearInterval(node.interval);
         });
     }
 
-    RED.nodes.registerType('TinkerForge AmbientLight', tinkerForgeAmbientLight);
-}
+    RED.nodes.registerType('TinkerForge Moisture', tinkerForgeMoisture);
+};

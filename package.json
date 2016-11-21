@@ -28,6 +28,7 @@
       "config": "lib/config.js",
       "motion": "bricklets/Motion.js",
       "humidity": "bricklets/Humidity.js",
+      "moisture": "bricklets/Moisture.js",
       "ptc": "bricklets/PTC.js",
       "temperature": "bricklets/Temperature.js",
       "co2": "bricklets/CO2.js",
@@ -35,9 +36,11 @@
       "digiin": "bricklets/IndDigital4In.js",
       "inddualanalogin": "bricklets/IndDualAnalogIn.js",
       "analogout": "bricklets/AnalogOut.js",
+      "indanalogout": "bricklets/IndAnalogOut.js",
       "ledstrip": "bricklets/LEDStrip.js",
       "digiout": "bricklets/IndDigital4Out.js",
       "indanalogout": "bricklets/IndAnalogOut.js",
+      "remoteswitch": "bricklets/RemoteSwitch.js",
       "dualrealy":"bricklets/DualRelay.js"
     }
   }
