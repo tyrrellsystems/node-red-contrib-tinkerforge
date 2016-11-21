@@ -26,6 +26,8 @@ Currently there are nodes for the following bricklets
  - Motion Detector Bricklet
  - Analog Out Bricklet 2.0
  - Ambient Light Bricklet 2.0
+ - Industrial Analog Out
+ - Remote Switch Bricklet
  - Industrial Analog Out Bricklet
  - Industrial Dual Analog In Bricklet
  - Dual Relay Bricklet

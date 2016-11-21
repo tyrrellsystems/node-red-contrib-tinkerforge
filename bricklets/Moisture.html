@@ -11,7 +11,7 @@
   limitations under the License.
 -->
 
-<script type="text/x-red" data-template-name="TinkerForge AmbientLight">
+<script type="text/x-red" data-template-name="TinkerForge Moisture">
 	<div class="form-row">
         <label for="node-input-device"><i class="fa fa-tasks"></i> Device</label>
         <input type="text" id="node-input-device" >
@@ -30,19 +30,18 @@
     </div>
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="AmbientLight">
+        <input type="text" id="node-input-name" placeholder="Moisture">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="TinkerForge AmbientLight">
-	<p>A node to read the value from a Tinkerforge Ambient Light bricklet</p>
-	<ul>
-		<li>Poll time - time in seconds between reading current value</li>
-	</ul>
+<script type="text/x-red" data-help-name="TinkerForge Moisture">
+  <p>A node to trigger messages based on the TinkerForge Moisture Bricklet</p>
+  <p>The node takes a Tinkerforge device, a sensor and a poll interval as configuration parameters.</p>
+  <p>It outputs a message with Moisture value in the payload</p>
 </script>
 
 <script type="text/javascript">
-	RED.nodes.registerType("TinkerForge AmbientLight",{
+	RED.nodes.registerType("TinkerForge Moisture",{
 		category: 'TinkerForge',
 		defaults: {
 			device: {type: "TinkerForgeConfig", required: true},
@@ -55,9 +54,8 @@
 		outputs: 1,
 		inputs: 0,
 		label: function() {
-			return this.name || "TinkerForge AmbientLight";
+			return this.name || "TinkerForge Moisture";
 		},
-		paletteLabel: 'Ambient Light',
 		color: 'gray',
 		icon: 'tf.png',
 		oneditprepare: function() {
@@ -65,19 +63,7 @@
 
 			if (node.device) {
 				var key = $('#node-input-device').val();
-				$.getJSON('TinkerForge/' + key +"/sensors/" + 259, function(data){
-					$('#node-input-sensor').find('option').remove().end();
-					for (d in data) {
-						$('<option/>',{
-							value: data[d].uid,
-							text: data[d].uid + " - " + data[d].position
-						}).appendTo('#node-input-sensor');
-					}
-					if (node.sensor) {
-						$('#node-input-sensor').val(node.sensor);
-					}
-				});
-				$.getJSON('TinkerForge/' + key +"/sensors/" + 21, function(data){
+				$.getJSON('TinkerForge/' + key +"/sensors/" + 232, function(data){
 					$('#node-input-sensor').find('option').remove().end();
 					for (d in data) {
 						$('<option/>',{
@@ -97,19 +83,7 @@
 				var dev = $('#node-input-device').val();
 				if (dev) {
 					var key = dev;
-					$.getJSON('TinkerForge/' + key +"/sensors/" + 259, function(data){
-						$('#node-input-sensor').find('option').remove().end();
-						for (d in data) {
-							$('<option/>',{
-								value: data[d].uid,
-								text: data[d].uid + " - " + data[d].position
-							}).appendTo('#node-input-sensor');
-						}
-						if (node.sensor) {
-							$('#node-input-sensor').val(node.sensor);
-						}
-					});
-					$.getJSON('TinkerForge/' + key +"/sensors/" + 21, function(data){
+					$.getJSON('TinkerForge/' + key +"/sensors/" + 232, function(data){
 						$('#node-input-sensor').find('option').remove().end();
 						for (d in data) {
 							$('<option/>',{
