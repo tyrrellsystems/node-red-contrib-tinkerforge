@@ -18,7 +18,9 @@ npm install hardillb/node-red-contrib-tinkerforge
 Currently there are nodes for the following bricklets
 
  - Humidity Bricklet
+ - Moisture Bricklet
  - Temperature Bricklet
+ - CO2 Bricklet
  - Industrial Diginal In 4 Bricklet
  - Industrial Diginal Out 4 Bricklet
  - PTC Bricklet
@@ -26,7 +28,6 @@ Currently there are nodes for the following bricklets
  - Motion Detector Bricklet
  - Analog Out Bricklet 2.0
  - Ambient Light Bricklet 2.0
- - Industrial Analog Out
  - Remote Switch Bricklet
  - Industrial Analog Out Bricklet
  - Industrial Dual Analog In Bricklet

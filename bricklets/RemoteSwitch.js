@@ -46,20 +46,35 @@ module.exports = function(RED) {
         });
 
 	node.on('input', function(msg){             
-	    if(node.md) {                 
-	      if (typeof msg.payload === 'number') {                     
-	        if (msg.payload == 1) {
-                      var switchto = Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_ON;
-		    }
-		    else {
-                      var switchto = Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_OFF;
- 		    }
-                switch (node.mode) {
-                case 'A':node.md.switchSocketA(node.addr1, node.addr2, switchto);break;
-                case 'B':node.md.switchSocketB(node.addr1, node.addr2, switchto);break;
-                case 'C':node.md.switchSocketC(node.addr1, node.addr2, switchto);break;
+        if(node.md) {
+            var switchto;            
+            if (typeof msg.payload === 'number') {                     
+                if (msg.payload == 1) {
+                    switchto = Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_ON;
+                } else {
+                    switchto = Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_OFF;
                 }
-	      }
+            } else if (typeof msg.payload === 'boolean') {
+                if (msg.payload) {
+                    switchto = Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_ON;
+                } else {
+                    switchto = Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_OFF;
+                }
+            }
+
+            if (switchto) {
+                switch (node.mode) {
+                    case 'A':
+                        node.md.switchSocketA(node.addr1, node.addr2, switchto);
+                        break;
+                    case 'B':
+                        node.md.switchSocketB(node.addr1, node.addr2, switchto);
+                        break;
+                    case 'C':
+                        node.md.switchSocketC(node.addr1, node.addr2, switchto);
+                        break;
+                }
+            }
 	    }         
     });
 
