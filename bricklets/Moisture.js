@@ -14,16 +14,20 @@
  * limitations under the License.
  **/
 
+
+"use strict";
 var Tinkerforge = require('tinkerforge');
 var devices = require('../lib/devices');
 
 module.exports = function(RED) {
-    "use strict";
-	function tinkerForgeAnalogOut(n) {
+
+    function tinkerForgeMoisture(n) {
         RED.nodes.createNode(this,n);
         this.device = n.device;
         this.sensor = n.sensor;
         this.name = n.name;
+        this.topic = n.topic;
+        this.pollTime = n.pollTime;
         var node = this;
 
         node.ipcon = new Tinkerforge.IPConnection(); //devices[this.device].ipcon;
@@ -34,31 +38,34 @@ module.exports = function(RED) {
                 node.warn("couldn't connect");
             }
         });
-
+        
         node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
         function(connectReason) {
-            node.ao = new Tinkerforge.BrickletAnalogOutV2(node.sensor, node.ipcon);
-        });
+            node.h = new Tinkerforge.BrickletMoisture(node.sensor, node.ipcon);
 
-
-        node.on('input', function(msg){
-            if(node.ao) {
-                if (typeof msg.payload === 'number') {
-                    if (msg.payload >=0 && msg.payload <= 12) {
-                        var v = Math.round(msg.payload * 1000);
-                        node.ao.setOutputVoltage(v);
-                    }
-                } else {
-                    node.error("Payload not a number");
+            node.interval = setInterval(function(){
+                if (node.h) {
+                    node.h.getMoistureValue(function(Moisture) {
+                        node.send({
+                            topic: node.topic || 'Moisture',
+                            payload: Moisture
+                        });
+                    },
+                    function(err) {
+                        //error
+                        if (err == 31) {
+                            node.error("Not connected");
+                        }
+                    }); 
                 }
-            }
+            },(node.pollTime * 1000));
         });
-        
 
         node.on('close',function() {
             node.ipcon.disconnect();
+            clearInterval(node.interval);
         });
     }
 
-    RED.nodes.registerType('TinkerForge AnalogOut', tinkerForgeAnalogOut);
-}
+    RED.nodes.registerType('TinkerForge Moisture', tinkerForgeMoisture);
+};

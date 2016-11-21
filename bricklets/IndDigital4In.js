@@ -81,7 +81,7 @@ module.exports = function(RED) {
                     node.currentState = valueMask;
             });
 
-            node.ida4.getValue(function(valueMask){
+            node.idi4.getValue(function(valueMask){
                 if (valueMask & 1) {
                     node.send({
                         topic: node.topic + "/0",
