@@ -36,8 +36,11 @@
 
 <script type="text/x-red" data-help-name="TinkerForge CO2">
   <p>A node to trigger messages based on the TinkerForge CO2 Bricklet</p>
-  <p>The node takes a Tinkerforge device, a sensor and a poll interval as configuration parameters.</p>
-  <p>It outputs a message with relative humidity value as a value between 0 and 100 in the payload</p>
+  <p>Configuration options are:</p>
+  <ul>
+    <li>Poll inteval - time in seconds between reteriving a new value</li>
+  </ul>
+  <p>It outputs a message with a payload containg the ppm of CO2 in the sampled atmosphere</p>
 </script>
 
 <script type="text/javascript">

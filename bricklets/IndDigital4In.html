@@ -26,7 +26,7 @@
     </div>
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Temperature">
+        <input type="text" id="node-input-name" placeholder="Industrial Digital In">
     </div>
 </script>
 
@@ -35,6 +35,9 @@
  It outputs 1 message per input state change. The payload is 1 or 0 representing
  true or false respectively. You can identify which input changed by the postfix
  on the <i>msg.topic</i>.</p>
+ <p>e.g. when input 0 goes high a message will be sent with payload = 1 and topic
+ set to "topic-prefix/0", when the input does low again another message with 
+ payload = 0 and the same topic.</p>
 </script>
 
 <script type="text/javascript">

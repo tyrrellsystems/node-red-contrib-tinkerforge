@@ -38,10 +38,11 @@
  <p>A Node to read data from the Industrial Dual Analog In bricklet.</p>
  <p>The node takes 2 main configuration values</p>
  <ul>
-   <li>Topic Prefix - This will be pre-prended to either '/1' or '/2' to represent the 2 inputs.</li>
+   <li>Topic Prefix - This will be pre-prended to either '/0' or '/1' to represent the 2 inputs.</li>
    <li>Pole interval - How long in seconds between reading the value from the inputs.</li>
  </ul>
  <p>This node outputs 2 mesages per poll interval, one per input.</p>
+ <p>The msg.payload will be the voltage read from each input.</p>
 </script>
 
 <script type="text/javascript">
