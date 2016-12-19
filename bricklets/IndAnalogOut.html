@@ -26,8 +26,8 @@
         <option value="volts10">Voltage 0-10v</option>
       </select>
     </div>
-    <div>
-      <label for="node-input-modec"><i class="fa"</i> Current Mode</label>
+    <div class="form-row">
+      <label for="node-input-modec"><i class="fa"></i> Current Mode</label>
       <select id="node-input-modec">
         <option value="amps4">Current 4-20ma</option>
         <option value="amps20">Current 0-20ma</option>
@@ -51,6 +51,8 @@
   <p>This node controls the Industial Analog Out node</p>
   <p>You need to configure the voltage and current range and also which
   of these the input messages will change.</p>
+  <p>The msg.payload of the input message needs to be a floating point number
+  with in the range of the configured mode.</p>
 </script>
 
 <script type="text/javascript">
