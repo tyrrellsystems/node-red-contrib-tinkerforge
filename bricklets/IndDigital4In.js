@@ -85,7 +85,12 @@ module.exports = function(RED) {
                 if (valueMask & 1) {
                     node.send({
                         topic: node.topic + "/0",
-                        payload: (valueMask & 1)  != 0
+                        payload: true
+                    });
+                } else {
+                    node.send({
+                        topic: node.topic + "/0",
+                        payload: false
                     });
                 }
 
@@ -94,6 +99,11 @@ module.exports = function(RED) {
                         topic: node.topic + "/1",
                         payload: (valueMask & 2) != 0
                     });
+                } else {
+                    node.send({
+                        topic: node.topic + "/1",
+                        payload: false
+                    });
                 }
 
                 if (valueMask & 4) {
@@ -101,12 +111,22 @@ module.exports = function(RED) {
                         topic: node.topic + "/2",
                         payload: (valueMask & 4) != 0
                     });
+                } else {
+                    node.send({
+                        topic: node.topic + "/2",
+                        payload: false
+                    });
                 }
 
                 if (valueMask & 8) {
                     node.send({
                         topic: node.topic + "/3",
                         payload: (valueMask & 8) != 0
+                    });
+                } else {
+                    node.send({
+                        topic: node.topic + "/3",
+                        payload: false
                     });
                 }
                 node.currentState = valueMask;
