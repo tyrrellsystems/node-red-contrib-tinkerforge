@@ -47,22 +47,25 @@ module.exports = function(RED) {
 
 	node.on('input', function(msg){             
         if(node.md) {
-            var switchto;            
+            var switchto;
+            var input = false;           
             if (typeof msg.payload === 'number') {                     
                 if (msg.payload == 1) {
                     switchto = Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_ON;
                 } else {
                     switchto = Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_OFF;
                 }
+                input = true;
             } else if (typeof msg.payload === 'boolean') {
                 if (msg.payload) {
                     switchto = Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_ON;
                 } else {
                     switchto = Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_OFF;
                 }
+                input = true;
             }
 
-            if (switchto) {
+            if (input) {
                 switch (node.mode) {
                     case 'A':
                         node.md.switchSocketA(node.addr1, node.addr2, switchto);
