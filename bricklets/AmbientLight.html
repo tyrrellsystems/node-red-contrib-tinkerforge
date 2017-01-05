@@ -65,8 +65,8 @@
 
 			if (node.device) {
 				var key = $('#node-input-device').val();
+				$('#node-input-sensor').find('option').remove().end();
 				$.getJSON('TinkerForge/' + key +"/sensors/" + 259, function(data){
-					$('#node-input-sensor').find('option').remove().end();
 					for (d in data) {
 						$('<option/>',{
 							value: data[d].uid,
@@ -78,7 +78,7 @@
 					}
 				});
 				$.getJSON('TinkerForge/' + key +"/sensors/" + 21, function(data){
-					$('#node-input-sensor').find('option').remove().end();
+					
 					for (d in data) {
 						$('<option/>',{
 							value: data[d].uid,
@@ -90,16 +90,17 @@
 					}
 				});
 			} else {
-				console.log("no device");
+				console.log("no device1");
 			}
 
 			$('#node-input-device').change(function(){
 				var dev = $('#node-input-device').val();
 				if (dev) {
 					var key = dev;
+					$('#node-input-sensor').find('option').remove().end();
 					$.getJSON('TinkerForge/' + key +"/sensors/" + 259, function(data){
-						$('#node-input-sensor').find('option').remove().end();
 						for (d in data) {
+							console.log(d)
 							$('<option/>',{
 								value: data[d].uid,
 								text: data[d].uid + " - " + data[d].position
@@ -110,7 +111,6 @@
 						}
 					});
 					$.getJSON('TinkerForge/' + key +"/sensors/" + 21, function(data){
-						$('#node-input-sensor').find('option').remove().end();
 						for (d in data) {
 							$('<option/>',{
 								value: data[d].uid,
@@ -122,7 +122,7 @@
 						}
 					});
 				} else {
-					console.log("no device");
+					console.log("no device2");
 				}
 			});
 
