@@ -47,7 +47,7 @@ module.exports = function(RED) {
                     node.t.getDistanceValue(function(distance) {
                         node.send({
                             topic: node.topic || 'distanceUS',
-                            payload: distance/100.0
+                            payload: distance/10.0
                         });
                     },
                     function(err) {

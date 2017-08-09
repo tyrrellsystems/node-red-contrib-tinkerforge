@@ -43,9 +43,9 @@
         "remoteswitch": "bricklets/RemoteSwitch.js",
         "dualrealy": "bricklets/DualRelay.js",
         "temperatureIR": "bricklets/TemperatureIR.js",
-        "barometer": "bricklets/Barometer.js",
         "tilt": "bricklets/Tilt.js",
-        "distanceUS": "bricklets/DistanceUS.js"
+        "distanceUS": "bricklets/DistanceUS.js",
+        "barometer": "bricklets/Barometer.js"
     }
   }
 }

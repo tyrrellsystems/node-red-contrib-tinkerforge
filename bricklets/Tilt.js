@@ -45,7 +45,7 @@ module.exports = function(RED) {
             node.interval = setInterval(function(){
                 if (node.t) {
                     node.t.getTiltState(function(tiltState) {
-						
+
 					//	if(tiltState === 0) {
 					//		tiltState = "State 0: Closed: The ball in the tilt switch closes the circuit.";
 					//	}
@@ -58,7 +58,7 @@ module.exports = function(RED) {
 
                         node.send({
                             topic: node.topic || 'tilt',
-                            payload: tiltState
+                            payload: "tiltState"
                         });
                     },
                     function(err) {
