@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 IBM Corp.
+ * Copyright 2017 IBM Corp.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ var devices = require('../lib/devices');
 
 module.exports = function(RED) {
     "use strict";
-    
+
 	function tinkerForgePTC(n) {
         RED.nodes.createNode(this,n);
         this.device = n.device;
@@ -61,7 +61,7 @@ module.exports = function(RED) {
             clearInterval(node.interval);
             node.ipcon.disconnect();
         });
-        
+
     }
 
     RED.nodes.registerType('TinkerForge PTC', tinkerForgePTC);

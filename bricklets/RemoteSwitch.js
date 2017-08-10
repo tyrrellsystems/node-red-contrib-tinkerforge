@@ -1,4 +1,5 @@
 /**
+ * Copyright 2017 IBM Corp.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +19,7 @@
 var Tinkerforge = require('tinkerforge');
 var devices = require('../lib/devices');
 
-module.exports = function(RED) { 
+module.exports = function(RED) {
 
 	function tinkerForgeRemoteSwitch(n) {
         RED.nodes.createNode(this,n);
@@ -45,11 +46,11 @@ module.exports = function(RED) {
             node.md = new Tinkerforge.BrickletRemoteSwitch(node.sensor, node.ipcon);
         });
 
-	node.on('input', function(msg){             
+	node.on('input', function(msg){
         if(node.md) {
             var switchto;
-            var input = false;           
-            if (typeof msg.payload === 'number') {                     
+            var input = false;
+            if (typeof msg.payload === 'number') {
                 if (msg.payload == 1) {
                     switchto = Tinkerforge.BrickletRemoteSwitch.SWITCH_TO_ON;
                 } else {
@@ -78,7 +79,7 @@ module.exports = function(RED) {
                         break;
                 }
             }
-	    }         
+	    }
     });
 
         node.on('close',function() {
