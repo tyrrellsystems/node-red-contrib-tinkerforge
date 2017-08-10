@@ -45,7 +45,7 @@
         "temperatureIR": "bricklets/TemperatureIR.js",
         "tilt": "bricklets/Tilt.js",
         "distanceUS": "bricklets/DistanceUS.js",
-        "distanceIR": "bricklets/DistanceIR"
+        "distanceIR": "bricklets/DistanceIR.js"
     }
   }
 }
