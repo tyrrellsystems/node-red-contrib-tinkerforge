@@ -46,16 +46,6 @@ module.exports = function(RED) {
                 if (node.t) {
                     node.t.getTiltState(function(tiltState) {
 
-					//	if(tiltState === 0) {
-					//		tiltState = "State 0: Closed: The ball in the tilt switch closes the circuit.";
-					//	}
-					//	else if (tiltState === 1) {
-					//		tiltState = "State 1: Open: The ball in the tilt switch does not close the circuit.";
-					//	}
-					//	else if (tiltState === 2) {
-					//		tiltState = "State 2: Closed Vibrating: The tilt switch is in motion (rapid change between open and close).";
-					//	}
-
                         node.send({
                             topic: node.topic || 'tilt',
                             payload: "tiltState"
