@@ -48,7 +48,7 @@ module.exports = function(RED) {
 
                         node.send({
                             topic: node.topic || 'tilt',
-                            payload: "tiltState"
+                            payload: tiltState
                         });
                     },
                     function(err) {
