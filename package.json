@@ -45,7 +45,10 @@
         "temperatureIR": "bricklets/TemperatureIR.js",
         "tilt": "bricklets/Tilt.js",
         "distanceUS": "bricklets/DistanceUS.js",
-        "distanceIR": "bricklets/DistanceIR.js"
+        "distanceIR": "bricklets/DistanceIR.js",
+        "color": "bricklets/Color.js",
+        "dualButton": "bricklets/DualButton.js",
+        "voltageCurrent": "bricklets/VoltageCurrent.js"
     }
   }
 }
