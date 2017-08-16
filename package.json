@@ -50,7 +50,10 @@
         "dualButton": "bricklets/DualButton.js",
         "voltageCurrent": "bricklets/VoltageCurrent.js",
         "hallEffect": "bricklets/HallEffect.js",
-        "soundIntensity": "bricklets/SoundIntensity.js"
+        "soundIntensity": "bricklets/SoundIntensity.js",
+        "linearPoti": "bricklets/LinearPoti.js",
+        "rotaryPoti": "bricklets/RotaryPoti.js",
+        "RotaryEncoder": "bricklets/RotaryEncoder.js"
 
     }
   }

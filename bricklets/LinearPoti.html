@@ -1,4 +1,4 @@
-<!--
+LinearPoti<!--
 -  Copyright 2017 IBM Corp.
 -  Licensed under the Apache License, Version 2.0 (the "License");
 -  you may not use this file except in compliance with the License.
@@ -11,8 +11,7 @@
 -  limitations under the License.
 --->
 
-
-<script type="text/x-red" data-template-name="TinkerForge TemperatureIR">
+<script type="text/x-red" data-template-name="TinkerForge LinearPoti">
 	<div class="form-row">
         <label for="node-input-device"><i class="fa fa-tasks"></i> Device</label>
         <input type="text" id="node-input-device" >
@@ -31,25 +30,25 @@
     </div>
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="TemperatureIR">
+        <input type="text" id="node-input-name" placeholder="LinearPoti">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="TinkerForge TemperatureIR">
-	<p>A input node to poll the value from a Tinkerforge TemperatureIR bricklet</p>
+<script type="text/x-red" data-help-name="TinkerForge LinearPoti">
+	<p>A input node to poll the value from a Tinkerforge LinearPoti bricklet</p>
 	<p>Configuration options are:</p>
 	<ul>
-		<p><li>Poll time - time in seconds between reading current value</li></p>
-		<p><li>Topic - ambientTemperature or objectTemperature to output only one of both</li></p>
+		<li>Poll time - time in seconds between reading current value</li>
 	</ul>
+	<p></p>
 	<p>Output:</p>
 	<ul>
-		<li>msg.payload - object and ambient temperature in degrees C</li>
+		<li>msg.payload - Position of the linear potentiometer between 0 and 100</li>
 	</ul>
 </script>
 
 <script type="text/javascript">
-	RED.nodes.registerType("TinkerForge TemperatureIR",{
+	RED.nodes.registerType("TinkerForge LinearPoti",{
 		category: 'TinkerForge',
 		defaults: {
 			device: {type: "TinkerForgeConfig", required: true},
@@ -62,9 +61,9 @@
 		outputs: 1,
 		inputs: 0,
 		label: function() {
-			return this.name || "TinkerForge TemperatureIR";
+			return this.name || "TinkerForge LinearPoti";
 		},
-		paletteLabel: 'TemperatureIR',
+		paletteLabel: 'LinearPoti',
 		color: 'gray',
 		icon: 'tf.png',
 		oneditprepare: function() {
@@ -72,7 +71,7 @@
 
 			if (node.device) {
 				var key = $('#node-input-device').val();
-				$.getJSON('TinkerForge/' + key +"/sensors/" + 217, function(data){
+				$.getJSON('TinkerForge/' + key +"/sensors/" + 213, function(data){
 					$('#node-input-sensor').find('option').remove().end();
 					for (d in data) {
 						$('<option/>',{
@@ -92,7 +91,7 @@
 				var dev = $('#node-input-device').val();
 				if (dev) {
 					var key = dev;
-					$.getJSON('TinkerForge/' + key +"/sensors/" + 217, function(data){
+					$.getJSON('TinkerForge/' + key +"/sensors/" + 213, function(data){
 						$('#node-input-sensor').find('option').remove().end();
 						for (d in data) {
 							$('<option/>',{

@@ -88,5 +88,5 @@ module.exports = function(RED) {
 
     }
 
-    RED.nodes.registerType('TinkerForge Temperature IR', tinkerForgeTemperatureIR);
+    RED.nodes.registerType('TinkerForge TemperatureIR', tinkerForgeTemperatureIR);
 };
