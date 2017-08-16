@@ -48,7 +48,10 @@
         "distanceIR": "bricklets/DistanceIR.js",
         "color": "bricklets/Color.js",
         "dualButton": "bricklets/DualButton.js",
-        "voltageCurrent": "bricklets/VoltageCurrent.js"
+        "voltageCurrent": "bricklets/VoltageCurrent.js",
+        "hallEffect": "bricklets/HallEffect.js",
+        "soundIntensity": "bricklets/SoundIntensity.js"
+
     }
   }
 }
