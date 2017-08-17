@@ -53,7 +53,10 @@
         "soundIntensity": "bricklets/SoundIntensity.js",
         "linearPoti": "bricklets/LinearPoti.js",
         "rotaryPoti": "bricklets/RotaryPoti.js",
-        "RotaryEncoder": "bricklets/RotaryEncoder.js"
+        "rotaryEncoder": "bricklets/RotaryEncoder.js",
+        "line": "bricklets/Line.js",
+        "barometer": "bricklets/Barometer.js",
+        "piezoSpeaker": "bricklets/PiezoSpeaker.js"
 
     }
   }
