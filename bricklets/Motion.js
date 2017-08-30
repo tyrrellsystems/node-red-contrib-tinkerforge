@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 IBM Corp.
+ * Copyright 2017 IBM Corp.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 var Tinkerforge = require('tinkerforge');
 var devices = require('../lib/devices');
 
-module.exports = function(RED) { 
+module.exports = function(RED) {
 
 	function tinkerForgeMovement(n) {
         RED.nodes.createNode(this,n);
@@ -61,7 +61,7 @@ module.exports = function(RED) {
             });
         };
 
-        
+
 
         node.on('close',function() {
             node.ipcon.disconnect();

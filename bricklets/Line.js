@@ -15,20 +15,18 @@
  **/
 
 
+"use strict";
 var Tinkerforge = require('tinkerforge');
 var devices = require('../lib/devices');
 
 module.exports = function(RED) {
-    "use strict";
-
-    function tinkerForgeIndDualAnalogIn(n) {
+	function tinkerForgeLine(n) {
         RED.nodes.createNode(this,n);
         this.device = n.device;
         this.sensor = n.sensor;
         this.name = n.name;
         this.topic = n.topic;
         this.pollTime = n.pollTime;
-        this.state = [0,0];
         var node = this;
 
         node.ipcon = new Tinkerforge.IPConnection(); //devices[this.device].ipcon;
@@ -42,49 +40,30 @@ module.exports = function(RED) {
 
         node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
         function(connectReason) {
-            node.idai = new Tinkerforge.BrickletIndustrialDualAnalogIn(node.sensor, node.ipcon);
+            node.t = new Tinkerforge.BrickletLine(node.sensor, node.ipcon);
 
             node.interval = setInterval(function(){
-                node.idai.getVoltage(0,
-                    function (voltage){
-                        var msg = {
-                            topic: (node.topic || "") + "/0",
-                            payload: voltage / 1000
-                        };
-                        node.send(msg);
-
-                        node.idai.getVoltage(1,
-                            function (voltage){
-                                var msg = {
-                                    topic: (node.topic || "") + "/1",
-                                    payload: voltage / 1000
-                                };
-                                node.send(msg);
-                            }, function(err){
-                                if (err == 31) {
-                                    node.error("Not connected");
-                                } else {
-                                    node.error("Other err " + err );
-                                }
-                            }
-                        );
-
-                    }, function(err){
-                        if (err == 31) {
-                            node.error("Not connected");
-                        }
-                    }
-                );
+                if (node.t) {
+                    node.t.getReflectivity(function(reflect) {
+                        node.send({
+                            topic: node.topic || 'Line',
+                            payload: reflect
+                        });
+                    },
+                    function(err) {
+                        //error
+                        node.error("PTC - " + err);
+                    });
+                }
             },(node.pollTime * 1000));
-
         });
-
 
         node.on('close',function() {
-            node.ipcon.disconnect();
             clearInterval(node.interval);
+            node.ipcon.disconnect();
         });
-    };
 
-    RED.nodes.registerType('TinkerForge IndDualAnalogIn', tinkerForgeIndDualAnalogIn);
+    }
+
+    RED.nodes.registerType('TinkerForge Line', tinkerForgeLine);
 };

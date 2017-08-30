@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 IBM Corp.
+ * Copyright 2017 IBM Corp.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ module.exports = function(RED) {
         this.name = n.name;
         this.rgb = n.rgb || "rgb";
         this.mode = n.mode;
-        this.bgnd = n.bgnd || "0,0,0"; 
+        this.bgnd = n.bgnd || "0,0,0";
         this.pixels = n.pixels;
         this.wipe = Number(n.wipe || 40)
         if (this.wipe <0) {this.wipe = 0}
@@ -54,7 +54,7 @@ module.exports = function(RED) {
             sendRGB();
         });
 
-        
+
 
         node.r = new Array(Number(node.pixels));
         node.g = new Array(Number(node.pixels));
@@ -133,7 +133,7 @@ module.exports = function(RED) {
                             col = colours.getRGB(parts[0],"rgb");
                             index = parts[1];
                         }
-                        
+
                         parts = new Array(4);
                         var colParts = col.split(",");
                         parts[0] = index;

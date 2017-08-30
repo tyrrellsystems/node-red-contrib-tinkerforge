@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 IBM Corp.
+ * Copyright 2017 IBM Corp.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,12 @@
  **/
 
 
-
 var Tinkerforge = require('tinkerforge');
 var devices = require('../lib/devices');
 
 module.exports = function(RED) {
     "use strict";
-    
+
 	function tinkerForgeDigitalOut(n) {
         RED.nodes.createNode(this,n);
 
@@ -70,7 +69,7 @@ module.exports = function(RED) {
                             node.state["" + i] = false;
                         }
                     }
-                    
+
                 }
             } else if (msg.topic && msg.topic.indexOf('/') != -1 && typeof msg.payload === "boolean") {
                 if (msg.topic.indexOf('/') != msg.topic.length) {
@@ -82,7 +81,7 @@ module.exports = function(RED) {
                             mask += (1 << i);
                         }
                     }
-                    
+
                 }
             } else if (typeof msg.payload === "object") {
                 mask = 0;
@@ -155,7 +154,7 @@ module.exports = function(RED) {
                 console.log(mask.toString(2));
                 node.ido4.setValue(mask);
             }
-            
+
         });
 
     }

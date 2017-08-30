@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 IBM Corp.
+ * Copyright 2017 IBM Corp.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ var devices = require('../lib/devices');
 
 module.exports = function(RED) {
     "use strict";
-    
+
 	function tinkerForgeDigitalIn(n) {
         RED.nodes.createNode(this,n);
 
@@ -46,7 +46,7 @@ module.exports = function(RED) {
             node.idi4 = new Tinkerforge.BrickletIndustrialDigitalIn4(node.sensor, node.ipcon);
             //((1 << 0) + (1 << 1) + (1 << 2) + (1 << 3))
             node.idi4.setInterrupt(15);
-            node.idi4.on(Tinkerforge.BrickletIndustrialDigitalIn4.CALLBACK_INTERRUPT, 
+            node.idi4.on(Tinkerforge.BrickletIndustrialDigitalIn4.CALLBACK_INTERRUPT,
                 function(interupMask, valueMask){
                     // console.log("int mask - " + interupMask.toString(2));
                     // console.log("val mask - " + valueMask.toString(2));

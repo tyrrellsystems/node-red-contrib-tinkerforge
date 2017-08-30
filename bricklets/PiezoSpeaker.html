@@ -1,4 +1,4 @@
-<!--
+PiezoSpeaker<!--
 -  Copyright 2017 IBM Corp.
 -  Licensed under the Apache License, Version 2.0 (the "License");
 -  you may not use this file except in compliance with the License.
@@ -11,8 +11,9 @@
 -  limitations under the License.
 --->
 
-<script type="text/x-red" data-template-name="TinkerForge CO2">
-<div class="form-row">
+
+<script type="text/x-red" data-template-name="TinkerForge PiezoSpeaker">
+  <div class="form-row">
         <label for="node-input-device"><i class="fa fa-tasks"></i> Device</label>
         <input type="text" id="node-input-device" >
     </div>
@@ -21,45 +22,46 @@
       <select id="node-input-sensor"></select>
     </div>
     <div class="form-row">
-        <label for="node-input-pollTime"><i class="fa fa-clock"></i> Poll Interval</label>
-        <input type="number" id="node-input-pollTime" >
-    </div>
-    <div class="form-row">
-        <label for="node-input-topic"><i class="fa fa-tasks"></i> Topic</label>
-        <input type="text" id="node-input-topic" placeholder="Topic">
-    </div>
-    <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="CO2">
+        <input type="text" id="node-input-name" placeholder="PiezoSpeaker">
+    </div>
+    <div class="form-row">
+        <label for="node-input-frequency"><i class="fa fa-tasks"></i> Frequency</label>
+        <input type="number" id="node-input-frequency" placeholder="Frequency">
+    </div>
+    <div class="form-row">
+        <label for="node-input-duration"><i class="fa fa-tasks"></i> Duration</label>
+        <input type="number" id="node-input-duration" placeholder="Duration">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="TinkerForge CO2">
-  <p>A node to trigger messages based on the TinkerForge CO2 Bricklet</p>
+<script type="text/x-red" data-help-name="TinkerForge PiezoSpeaker">
+  <p>A node to control the Tinkerforge PiezoSpeaker bricklet</p>
+  <p>This node accepts a msg with the payload containing a string. The string "true" will toggle the speaker to beep</p>
   <p>Configuration options are:</p>
   <ul>
-    <li>Poll inteval - time in seconds between reteriving a new value</li>
+      <p><li>Frequency - frequency in hz of the beep</li></p>
+      <p><li>Duration - duration in ms of the beep</li></p>
   </ul>
-  <p>It outputs a message with a payload containg the ppm of CO2 in the sampled atmosphere</p>
+
 </script>
 
 <script type="text/javascript">
-  RED.nodes.registerType("TinkerForge CO2",{
+  RED.nodes.registerType("TinkerForge PiezoSpeaker",{
     category: 'TinkerForge',
     defaults: {
       device: {type: "TinkerForgeConfig", required: true},
       sensor: {required: true},
-      pollTime: {value: "10", required: true},
-      //sensor: {type: "TinkerForgeSensor", requried: true},
       name: {},
-      topic: {}
+      frequency: {},
+      duration: {}
     },
-    outputs: 1,
-    inputs: 0,
+    outputs: 0,
+    inputs: 1,
     label: function() {
-      return this.name || "TinkerForge CO2";
+      return this.name || "TinkerForge PiezoSpeaker";
     },
-    paletteLabel: 'CO2',
+    paletteLabel: 'PiezoSpeaker',
     color: 'gray',
     icon: 'tf.png',
     oneditprepare: function() {
@@ -67,7 +69,7 @@
 
       if (node.device) {
         var key = $('#node-input-device').val();
-        $.getJSON('TinkerForge/' + key +"/sensors/" + 262, function(data){
+        $.getJSON('TinkerForge/' + key +"/sensors/" + 242, function(data){
           $('#node-input-sensor').find('option').remove().end();
           for (d in data) {
             $('<option/>',{
@@ -87,7 +89,7 @@
         var dev = $('#node-input-device').val();
         if (dev) {
           var key = dev;
-          $.getJSON('TinkerForge/' + key +"/sensors/" + 262, function(data){
+          $.getJSON('TinkerForge/' + key +"/sensors/" + 242, function(data){
             $('#node-input-sensor').find('option').remove().end();
             for (d in data) {
               $('<option/>',{
@@ -95,6 +97,7 @@
                 text: data[d].uid + " - " + data[d].position
               }).appendTo('#node-input-sensor');
             }
+
             if (node.sensor) {
               $('#node-input-sensor').val(node.sensor);
             }
@@ -103,6 +106,8 @@
           console.log("no device");
         }
       });
+
+      console.log(node.sensor);
 
       if (node.sensor) {
         $('#node-input-sensor').val(node.sensor);

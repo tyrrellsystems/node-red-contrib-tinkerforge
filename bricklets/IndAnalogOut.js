@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 IBM Corp.
+ * Copyright 2017 IBM Corp.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
+ 
 
 var Tinkerforge = require('tinkerforge');
 var devices = require('../lib/devices');
@@ -77,7 +78,7 @@ module.exports = function(RED) {
           if (node.modec === 'amps4') {
             if (msg.payload >= 4 && msg.payload <= 20) {
               node.ao.setCurrent(msg.payload * 1000);
-            } 
+            }
           } else if (node.modec === 'amps20') {
             if (msg.payload >= 0 && msg.payload < 20){
               node.ao.setCurrent(msg.payload * 1000);

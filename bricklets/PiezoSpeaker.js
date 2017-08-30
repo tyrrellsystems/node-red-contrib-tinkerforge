@@ -19,15 +19,15 @@ var Tinkerforge = require('tinkerforge');
 var devices = require('../lib/devices');
 
 module.exports = function(RED) {
-    "use strict";
+	"use strict";
 
-	function tinkerForgePTC(n) {
-        RED.nodes.createNode(this,n);
+	function tinkerForgePiezoSpeaker(n) {
+		RED.nodes.createNode(this,n);
         this.device = n.device;
         this.sensor = n.sensor;
         this.name = n.name;
-        this.topic = n.topic;
-        this.pollTime = n.pollTime;
+		this.frequency = n.frequency;
+		this.duration = n.duration;
         var node = this;
 
         node.ipcon = new Tinkerforge.IPConnection(); //devices[this.device].ipcon;
@@ -39,30 +39,24 @@ module.exports = function(RED) {
             }
         });
 
+
         node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
         function(connectReason) {
-            node.t = new Tinkerforge.BrickletPTC(node.sensor, node.ipcon);
+            node.ps = new Tinkerforge.BrickletPiezoSpeaker(node.sensor, node.ipcon);
+        });
 
-            node.interval = setInterval(function(){
-                node.t.getTemperature(function(temp) {
-                    node.send({
-                        topic: node.topic || 'temperature',
-                        payload: temp/100.0
-                    });
-                },
-                function(err) {
-                    //error
-                    node.error(err);
-                });
-            },(node.pollTime * 1000));
+        node.on('input', function(msg){
+        	if (msg.hasOwnProperty('payload')){
+                if (msg.payload === "true") {
+        		  node.ps.beep(n.duration, n.frequency);
+                }
+        	}
         });
 
         node.on('close',function() {
-            clearInterval(node.interval);
             node.ipcon.disconnect();
         });
+	}
 
-    }
-
-    RED.nodes.registerType('TinkerForge PTC', tinkerForgePTC);
-}
+    RED.nodes.registerType('TinkerForge PiezoSpeaker', tinkerForgePiezoSpeaker);
+};

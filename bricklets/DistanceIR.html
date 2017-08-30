@@ -11,15 +11,18 @@
 -  limitations under the License.
 --->
 
-
-<script type="text/x-red" data-template-name="TinkerForge Motion">
+<script type="text/x-red" data-template-name="TinkerForge DistanceIR">
 	<div class="form-row">
         <label for="node-input-device"><i class="fa fa-tasks"></i> Device</label>
-        <input type="text" id="node-input-device">
+        <input type="text" id="node-input-device" >
     </div>
     <div class="form-row">
     	<label for="node-input-sensor"><i class="fa"></i> Sensor</label>
     	<select id="node-input-sensor"></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-pollTime"><i class="fa fa-clock"></i> Poll Interval</label>
+        <input type="number" id="node-input-pollTime" >
     </div>
     <div class="form-row">
         <label for="node-input-topic"><i class="fa fa-tasks"></i> Topic</label>
@@ -27,36 +30,40 @@
     </div>
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Humidity">
+        <input type="text" id="node-input-name" placeholder="DistanceIR">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="TinkerForge Motion">
-  <p>A node to trigger messages based on the TinkerForge Motion Bricklet</p>
-  <p>The node takes a Tinkerforge device and a sensor as configuration parameters.</p>
-  <p>The node outputs 2 messages</p>
-  <ul>
-    <li>payload: true - when movement is detected</li>
-    <li>payload: fale - when no movement has been detected in the bricklets timeout period</li>
-  </ul>
+<script type="text/x-red" data-help-name="TinkerForge DistanceIR">
+	<p>A input node to poll the value from a Tinkerforge DistanceIR bricklet</p>
+	<p>Configuration options are:</p>
+	<ul>
+		<li>Poll time - time in seconds between reading current value</li>
+	</ul>
+	<p></p>
+	<p>Output:</p>
+	<ul>
+		<li>msg.payload - distance in cm</li>
+	</ul>
 </script>
 
 <script type="text/javascript">
-	RED.nodes.registerType("TinkerForge Motion",{
+	RED.nodes.registerType("TinkerForge DistanceIR",{
 		category: 'TinkerForge',
 		defaults: {
 			device: {type: "TinkerForgeConfig", required: true},
 			sensor: {required: true},
-			//sensor: {type: "TinkerForgeSensor", required: true},
+			pollTime: {value: "10", required: true},
+			//sensor: {type: "TinkerForgeSensor", requried: true},
 			name: {},
 			topic: {}
 		},
 		outputs: 1,
 		inputs: 0,
 		label: function() {
-			return this.name || "TinkerForge Motion";
+			return this.name || "TinkerForge DistanceIR";
 		},
-		paletteLabel: 'Motion',
+		paletteLabel: 'DistanceIR',
 		color: 'gray',
 		icon: 'tf.png',
 		oneditprepare: function() {
@@ -64,7 +71,7 @@
 
 			if (node.device) {
 				var key = $('#node-input-device').val();
-				$.getJSON('TinkerForge/' + key +"/sensors/" + 233, function(data){
+				$.getJSON('TinkerForge/' + key +"/sensors/" + 25, function(data){
 					$('#node-input-sensor').find('option').remove().end();
 					for (d in data) {
 						$('<option/>',{
@@ -84,13 +91,16 @@
 				var dev = $('#node-input-device').val();
 				if (dev) {
 					var key = dev;
-					$.getJSON('TinkerForge/' + key +"/sensors/" + 233, function(data){
+					$.getJSON('TinkerForge/' + key +"/sensors/" + 25, function(data){
 						$('#node-input-sensor').find('option').remove().end();
 						for (d in data) {
 							$('<option/>',{
 								value: data[d].uid,
 								text: data[d].uid + " - " + data[d].position
 							}).appendTo('#node-input-sensor');
+						}
+						if (node.sensor) {
+							$('#node-input-sensor').val(node.sensor);
 						}
 					});
 				} else {

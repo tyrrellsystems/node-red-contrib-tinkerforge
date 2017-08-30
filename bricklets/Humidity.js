@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 IBM Corp.
+ * Copyright 2017 IBM Corp.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ module.exports = function(RED) {
                 node.warn("couldn't connect");
             }
         });
-        
+
         node.ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
         function(connectReason) {
             node.h = new Tinkerforge.BrickletHumidity(node.sensor, node.ipcon);
@@ -56,7 +56,7 @@ module.exports = function(RED) {
                         if (err == 31) {
                             node.error("Not connected");
                         }
-                    }); 
+                    });
                 }
             },(node.pollTime * 1000));
         });

@@ -1,15 +1,16 @@
 <!--
-  Copyright 2016 IBM Corp.
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-  http://www.apache.org/licenses/LICENSE-2.0
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
+-  Copyright 2017 IBM Corp.
+-  Licensed under the Apache License, Version 2.0 (the "License");
+-  you may not use this file except in compliance with the License.
+-  You may obtain a copy of the License at
+-  http://www.apache.org/licenses/LICENSE-2.0
+-  Unless required by applicable law or agreed to in writing, software
+-  distributed under the License is distributed on an "AS IS" BASIS,
+-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-  See the License for the specific language governing permissions and
+-  limitations under the License.
+--->
+
 
 <script type="text/x-red" data-template-name="TinkerForge Digital-In">
 	<div class="form-row">
@@ -31,12 +32,12 @@
 </script>
 
 <script type="text/x-red" data-help-name="TinkerForge Digital-In">
- <p>This node outputs messages when ever the state of any of the inputs changes. 
+ <p>This node outputs messages when ever the state of any of the inputs changes.
  It outputs 1 message per input state change. The payload is 1 or 0 representing
  true or false respectively. You can identify which input changed by the postfix
  on the <i>msg.topic</i>.</p>
  <p>e.g. when input 0 goes high a message will be sent with payload = 1 and topic
- set to "topic-prefix/0", when the input does low again another message with 
+ set to "topic-prefix/0", when the input does low again another message with
  payload = 0 and the same topic.</p>
 </script>
 
