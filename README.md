@@ -32,6 +32,19 @@ Currently there are nodes for the following bricklets
  - Industrial Analog Out Bricklet
  - Industrial Dual Analog In Bricklet
  - Dual Relay Bricklet
+ - Temperature IR
+ - Tilt
+ - Distance US
+ - Distance IR
+ - Voltage/Current
+ - Hall Effect
+ - Sound Intensity
+ - Linear Poti
+ - Rotary Poti
+ - Line
+ - Barometer
+ - Piezo Speaker
+ - Laser Range Finder
 
 Adding more should be pretty trivial, these are just the bricks I currently 
 access to for testing
