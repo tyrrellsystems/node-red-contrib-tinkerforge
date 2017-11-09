@@ -63,7 +63,8 @@
         "rotaryEncoder": "bricklets/RotaryEncoder.js",
         "line": "bricklets/Line.js",
         "barometer": "bricklets/Barometer.js",
-        "piezoSpeaker": "bricklets/PiezoSpeaker.js"
+        "piezoSpeaker": "bricklets/PiezoSpeaker.js",
+        "laserRange": "bricklets/LaserRange.js"
     }
   }
 }
