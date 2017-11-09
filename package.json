@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-tinkerforge",
-  "version": "0.0.24",
+  "version": "0.0.25",
   "description": "Node-RED nodes to access Tinkerforge sensors",
   "dependencies": {
     "body-parser": "^1.15.1",
@@ -14,7 +14,14 @@
     "tinkerforge",
     "node-red"
   ],
-  "author": "hardillb@uk.ibm.com",
+  "contributors": [
+    {
+      "email": "hardillb@gmail.com"
+    },
+    {
+      "email": "davidoc85@hotmail.com"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/tyrrellsystems/node-red-contrib-tinkerforge"
@@ -57,7 +64,6 @@
         "line": "bricklets/Line.js",
         "barometer": "bricklets/Barometer.js",
         "piezoSpeaker": "bricklets/PiezoSpeaker.js"
-
     }
   }
 }
