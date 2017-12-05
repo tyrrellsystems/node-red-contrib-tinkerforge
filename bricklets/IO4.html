@@ -1,0 +1,149 @@
+<!--
+-  Copyright 2017 IBM Corp.
+-  Licensed under the Apache License, Version 2.0 (the "License");
+-  you may not use this file except in compliance with the License.
+-  You may obtain a copy of the License at
+-  http://www.apache.org/licenses/LICENSE-2.0
+-  Unless required by applicable law or agreed to in writing, software
+-  distributed under the License is distributed on an "AS IS" BASIS,
+-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-  See the License for the specific language governing permissions and
+-  limitations under the License.
+--->
+
+
+<script type="text/x-red" data-template-name="TinkerForge IO-4">
+  <div class="form-row">
+        <label for="node-input-device"><i class="fa fa-tasks"></i> Device</label>
+        <input type="text" id="node-input-device" >
+    </div>
+    <div class="form-row">
+      <label for="node-input-sensor"><i class="fa"></i> Sensor</label>
+      <select id="node-input-sensor"></select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-moded0"><i class="fa"></i>Pin 0</label>
+      <select id="node-input-moded0">
+        <option value="input">Input</option>
+        <option value="output">Ouput</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-moded1"><i class="fa"></i>Pin 1</label>
+      <select id="node-input-moded1">
+        <option value="input">Input</option>
+        <option value="output">Ouput</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-moded2"><i class="fa"></i>Pin 2</label>
+      <select id="node-input-moded2">
+        <option value="input">Input</option>
+        <option value="output">Ouput</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-moded3"><i class="fa"></i>Pin 3</label>
+      <select id="node-input-moded3">
+        <option value="input">Input</option>
+        <option value="output">Ouput</option>
+      </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> Topic</label>
+        <input type="text" id="node-input-topic" placeholder="Topic">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="IO-4">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="TinkerForge IO-4">
+  <p>This node controls the Digital Input Output node IO-4</p>
+  <p>Each pin needs to be configured as either input or output.</p>
+  <p>When an input is configured it outputs messages when the state of any of the inputs changes and
+  by default it sets all inputs to interrupts.
+  <p>It outputs 1 message per input state change. The payload is 1 or 0 representing
+  true or false respectively. You can identify which input changed by the postfix
+  on the <i>msg.topic</i>.</p>
+  <p>e.g. when input 0 goes high a message will be sent with payload = 1 and topic
+  set to "topic-prefix/0", when the input does low again another message with
+  payload = 0 and the same topic.</p>
+  <p>When an output is configured in one ore more pins, the node sets the outputs high or low based on the
+  incoming message.</p>
+  <p>The output defaults to false on initial startup and will be set according to the incoming
+  messages in the following format:</p>
+  <li>A true or false value together with a subtopic /0-3 for each output:
+  <pre>/3 : msg.payload : boolean
+  false</pre></li>
+  <li>An array of 0/1 or true/false
+  <pre>[0,0,0,1]</pre></li>
+  <p>This node has got an input and an output connection and depending on how it is setup, it will
+  ignore any output commands if it is setup as an input.</p>
+</script>
+
+<script type="text/javascript">
+
+  RED.nodes.registerType("TinkerForge IO-4",{
+    category: 'TinkerForge',
+    defaults:{
+      device: {type: "TinkerForgeConfig", required: true},
+      sensor: {required: true},
+      moded0: {value: 'input', required: true},
+      moded1: {value: 'input', required: true},
+      moded2: {value: 'input', required: true},
+      moded3: {value: 'input', required: true},
+      name: {},
+      topic: {}
+    },
+    outputs: 1,
+    inputs: 1,
+    label: function() {
+      return this.name || "TinkerForge IO-4";
+    },
+    paletteLabel: 'IO-4',
+    color: 'gray',
+    icon: 'tf.png',
+    oneditprepare: function() {
+      var node = this;
+
+      if (node.device) {
+        var key = $('#node-input-device').val();
+        $.getJSON('TinkerForge/' + key +"/sensors/" + 29, function(data){
+          $('#node-input-sensor').find('option').remove().end();
+          for (d in data) {
+              $('<option/>',{
+                value: data[d].uid,
+                text: data[d].uid + " - " + data[d].position
+              }).appendTo('#node-input-sensor');
+            }
+        });
+      } else {
+        console.log("no device");
+      }
+
+      $('#node-input-device').change(function(){
+        var dev = $('#node-input-device').val();
+        if (dev) {
+          var key = dev;
+          $.getJSON('TinkerForge/' + key +"/sensors/" + 29, function(data){
+            $('#node-input-sensor').find('option').remove().end();
+            for (d in data) {
+              $('<option/>',{
+                value: data[d].uid,
+                text: data[d].uid + " - " + data[d].position
+              }).appendTo('#node-input-sensor');
+            }
+          });
+        } else {
+          console.log("no device");
+        }
+      });
+
+      if (node.sensor) {
+        $('#node-input-sensor').val(node.sensor);
+      }
+    }
+  });
+</script>
