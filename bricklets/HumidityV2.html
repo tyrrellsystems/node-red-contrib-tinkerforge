@@ -1,0 +1,114 @@
+<!--
+-  Copyright 2017 IBM Corp.
+-  Licensed under the Apache License, Version 2.0 (the "License");
+-  you may not use this file except in compliance with the License.
+-  You may obtain a copy of the License at
+-  http://www.apache.org/licenses/LICENSE-2.0
+-  Unless required by applicable law or agreed to in writing, software
+-  distributed under the License is distributed on an "AS IS" BASIS,
+-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-  See the License for the specific language governing permissions and
+-  limitations under the License.
+-->
+
+
+<script type="text/x-red" data-template-name="TinkerForge HumidityV2">
+	<div class="form-row">
+        <label for="node-input-device"><i class="fa fa-tasks"></i> Device</label>
+        <input type="text" id="node-input-device" >
+    </div>
+    <div class="form-row">
+    	<label for="node-input-sensor"><i class="fa"></i> Sensor</label>
+    	<select id="node-input-sensor"></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-pollTime"><i class="fa fa-clock"></i> Poll Interval</label>
+        <input type="number" id="node-input-pollTime" >
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> Topic</label>
+        <input type="text" id="node-input-topic" placeholder="Topic">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="HumidityV2">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="TinkerForge HumidityV2">
+  <p>A node to trigger messages based on the TinkerForge Humidity 2.0 Bricklet</p>
+  <p>The node takes a Tinkerforge device, a sensor and a poll interval as configuration parameters.</p>
+  <p>Configuration options are:</p>
+	<ul>
+		<li>Poll inteval - time in seconds between reteriving a new value</li>
+		<li>Topic - humidity or temperarure to output only one of both</li>
+	</ul>
+  <p>msg.payload - humidity in % and temperature in degrees C</p>
+</script>
+
+<script type="text/javascript">
+	RED.nodes.registerType("TinkerForge HumidityV2",{
+		category: 'TinkerForge',
+		defaults: {
+			device: {type: "TinkerForgeConfig", required: true},
+			sensor: {required: true},
+			pollTime: {value: "10", required: true},
+			name: {},
+			topic: {}
+		},
+		outputs: 1,
+		inputs: 0,
+		label: function() {
+			return this.name || "TinkerForge HumidityV2";
+		},
+		paletteLabel: 'HumidityV2',
+		color: 'gray',
+		icon: 'tf.png',
+		oneditprepare: function() {
+			var node = this;
+
+			if (node.device) {
+				var key = $('#node-input-device').val();
+				$.getJSON('TinkerForge/' + key +"/sensors/" + 283, function(data){
+					$('#node-input-sensor').find('option').remove().end();
+					for (d in data) {
+						$('<option/>',{
+							value: data[d].uid,
+							text: data[d].uid + " - " + data[d].position
+						}).appendTo('#node-input-sensor');
+					}
+					if (node.sensor) {
+						$('#node-input-sensor').val(node.sensor);
+					}
+				});
+			} else {
+				console.log("no device");
+			}
+
+			$('#node-input-device').change(function(){
+				var dev = $('#node-input-device').val();
+				if (dev) {
+					var key = dev;
+					$.getJSON('TinkerForge/' + key +"/sensors/" + 283, function(data){
+						$('#node-input-sensor').find('option').remove().end();
+						for (d in data) {
+							$('<option/>',{
+								value: data[d].uid,
+								text: data[d].uid + " - " + data[d].position
+							}).appendTo('#node-input-sensor');
+						}
+						if (node.sensor) {
+							$('#node-input-sensor').val(node.sensor);
+						}
+					});
+				} else {
+					console.log("no device");
+				}
+			});
+
+			if (node.sensor) {
+				$('#node-input-sensor').val(node.sensor);
+			}
+		}
+	});
+</script>
