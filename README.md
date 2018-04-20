@@ -20,6 +20,7 @@ Currently there are nodes for the following bricklets
  - Humidity Bricklet
  - Moisture Bricklet
  - Temperature Bricklet
+ - Humidity V2 Bricklet
  - CO2 Bricklet
  - Industrial Diginal In 4 Bricklet
  - Industrial Diginal Out 4 Bricklet
