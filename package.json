@@ -35,6 +35,7 @@
         "config": "lib/config.js",
         "motion": "bricklets/Motion.js",
         "humidity": "bricklets/Humidity.js",
+        "humidityV2": "bricklets/HumidityV2.js",
         "moisture": "bricklets/Moisture.js",
         "ptc": "bricklets/PTC.js",
         "temperature": "bricklets/Temperature.js",
