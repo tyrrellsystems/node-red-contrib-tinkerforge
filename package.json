@@ -65,7 +65,7 @@
         "barometer": "bricklets/Barometer.js",
         "piezoSpeaker": "bricklets/PiezoSpeaker.js",
         "laserRange": "bricklets/LaserRange.js",
-		    "io4": "bricklets/IO4.js"
+	      "io4": "bricklets/IO4.js"
 
     }
   }
