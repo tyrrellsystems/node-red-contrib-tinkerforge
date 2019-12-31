@@ -1,6 +1,10 @@
 {
   "name": "node-red-contrib-tinkerforge",
+<<<<<<< Updated upstream
   "version": "0.0.25",
+=======
+  "version": "0.0.27",
+>>>>>>> Stashed changes
   "description": "Node-RED nodes to access Tinkerforge sensors",
   "dependencies": {
     "body-parser": "^1.15.1",
@@ -65,7 +69,8 @@
         "barometer": "bricklets/Barometer.js",
         "piezoSpeaker": "bricklets/PiezoSpeaker.js",
         "laserRange": "bricklets/LaserRange.js",
-	      "io4": "bricklets/IO4.js"
+	      "io4": "bricklets/IO4.js",
+        "distanceIRV2": "bricklets/distanceIRV2"
 
     }
   }
