@@ -1,10 +1,12 @@
 {
   "name": "node-red-contrib-tinkerforge",
-  "version": "0.0.26",
+
+  "version": "0.0.27",
+
   "description": "Node-RED nodes to access Tinkerforge sensors",
   "dependencies": {
     "body-parser": "^1.15.1",
-    "tinkerforge": "^2.0.8"
+    "tinkerforge": "^2.1.25"
   },
   "devDependencies": {},
   "scripts": {
@@ -54,19 +56,17 @@
         "tilt": "bricklets/Tilt.js",
         "distanceUS": "bricklets/DistanceUS.js",
         "distanceIR": "bricklets/DistanceIR.js",
-        "color": "bricklets/Color.js",
-        "dualButton": "bricklets/DualButton.js",
         "voltageCurrent": "bricklets/VoltageCurrent.js",
         "hallEffect": "bricklets/HallEffect.js",
         "soundIntensity": "bricklets/SoundIntensity.js",
         "linearPoti": "bricklets/LinearPoti.js",
         "rotaryPoti": "bricklets/RotaryPoti.js",
-        "rotaryEncoder": "bricklets/RotaryEncoder.js",
         "line": "bricklets/Line.js",
         "barometer": "bricklets/Barometer.js",
         "piezoSpeaker": "bricklets/PiezoSpeaker.js",
         "laserRange": "bricklets/LaserRange.js",
-	      "io4": "bricklets/IO4.js"
+	      "io4": "bricklets/IO4.js",
+        "distanceIRV2": "bricklets/DistanceIRV2.js"
 
     }
   }
