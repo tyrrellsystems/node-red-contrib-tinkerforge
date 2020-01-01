@@ -46,6 +46,7 @@ Currently there are nodes for the following bricklets
  - Piezo Speaker
  - Laser Range Finder
  - IO-4
+ - Distance IR V2.0
 
 Adding more should be pretty trivial, these are just the bricks I currently
 access to for testing
