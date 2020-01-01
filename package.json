@@ -1,10 +1,12 @@
 {
   "name": "node-red-contrib-tinkerforge",
+
   "version": "0.0.27",
+
   "description": "Node-RED nodes to access Tinkerforge sensors",
   "dependencies": {
     "body-parser": "^1.15.1",
-    "tinkerforge": "^2.0.8"
+    "tinkerforge": "^2.1.25"
   },
   "devDependencies": {},
   "scripts": {
@@ -35,6 +37,7 @@
         "config": "lib/config.js",
         "motion": "bricklets/Motion.js",
         "humidity": "bricklets/Humidity.js",
+        "humidityV2": "bricklets/HumidityV2.js",
         "moisture": "bricklets/Moisture.js",
         "ptc": "bricklets/PTC.js",
         "temperature": "bricklets/Temperature.js",
@@ -62,7 +65,7 @@
         "barometer": "bricklets/Barometer.js",
         "piezoSpeaker": "bricklets/PiezoSpeaker.js",
         "laserRange": "bricklets/LaserRange.js",
-	    "io4": "bricklets/IO4.js",
+	      "io4": "bricklets/IO4.js",
         "distanceIRV2": "bricklets/DistanceIRV2.js"
 
     }

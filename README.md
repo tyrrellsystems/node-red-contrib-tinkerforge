@@ -18,6 +18,7 @@ or to from the git head stream
 Currently there are nodes for the following bricklets
 
  - Humidity Bricklet
+ - Humidity V2 Bricklet
  - Moisture Bricklet
  - Temperature Bricklet
  - CO2 Bricklet
