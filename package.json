@@ -53,20 +53,17 @@
         "tilt": "bricklets/Tilt.js",
         "distanceUS": "bricklets/DistanceUS.js",
         "distanceIR": "bricklets/DistanceIR.js",
-        "color": "bricklets/Color.js",
-        "dualButton": "bricklets/DualButton.js",
         "voltageCurrent": "bricklets/VoltageCurrent.js",
         "hallEffect": "bricklets/HallEffect.js",
         "soundIntensity": "bricklets/SoundIntensity.js",
         "linearPoti": "bricklets/LinearPoti.js",
         "rotaryPoti": "bricklets/RotaryPoti.js",
-        "rotaryEncoder": "bricklets/RotaryEncoder.js",
         "line": "bricklets/Line.js",
         "barometer": "bricklets/Barometer.js",
         "piezoSpeaker": "bricklets/PiezoSpeaker.js",
         "laserRange": "bricklets/LaserRange.js",
 	    "io4": "bricklets/IO4.js",
-        "distanceIRV2": "bricklets/distanceIRV2.js"
+        "distanceIRV2": "bricklets/DistanceIRV2.js"
 
     }
   }

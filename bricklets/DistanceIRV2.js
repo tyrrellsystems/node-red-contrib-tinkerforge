@@ -46,7 +46,7 @@ module.exports = function(RED) {
                 if (node.t) {
                     node.t.getDistance(function(distance) {
                         node.send({
-                            topic: node.topic || 'distanceIRV2',
+                            topic: node.topic || 'DistanceIRV2',
                             payload: distance
                         });
                     },
@@ -65,5 +65,5 @@ module.exports = function(RED) {
 
     }
 
-    RED.nodes.registerType('TinkerForge DistanceIR V2.0', tinkerForgeDistanceIRV2);
+    RED.nodes.registerType('TinkerForge DistanceIRV2', tinkerForgeDistanceIRV2);
 };

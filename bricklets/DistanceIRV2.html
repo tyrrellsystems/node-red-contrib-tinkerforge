@@ -34,8 +34,8 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="TinkerForge DistanceIR V2.0">
-	<p>A input node to poll the value from a Tinkerforge DistanceIR V2.0 bricklet</p>
+<script type="text/x-red" data-help-name="TinkerForge DistanceIRV2">
+	<p>An input node to poll the value from a Tinkerforge DistanceIR V2.0 bricklet</p>
 	<p>Configuration options are:</p>
 	<ul>
 		<li>Poll time - time in seconds between reading current value</li>
@@ -48,21 +48,21 @@
 </script>
 
 <script type="text/javascript">
-	RED.nodes.registerType("TinkerForge DistanceIR V2.0",{
+	RED.nodes.registerType("TinkerForge DistanceIRV2",{
 		category: 'TinkerForge',
 		defaults: {
 			device: {type: "TinkerForgeConfig", required: true},
 			sensor: {required: true},
-			pollTime: {value: "10", required: true},
+			pollTime: {value: "1", required: true},
 			name: {},
 			topic: {}
 		},
 		outputs: 1,
 		inputs: 0,
 		label: function() {
-			return this.name || "TinkerForge DistanceIR V2.0";
+			return this.name || "TinkerForge DistanceIRV2";
 		},
-		paletteLabel: 'distanceIRV2',
+		paletteLabel: 'DistanceIRV2',
 		color: 'gray',
 		icon: 'tf.png',
 		oneditprepare: function() {
@@ -70,7 +70,7 @@
 
 			if (node.device) {
 				var key = $('#node-input-device').val();
-				$.getJSON('TinkerForge/' + key +"/sensors/" + 25, function(data){
+				$.getJSON('TinkerForge/' + key +"/sensors/" + 2125, function(data){
 					$('#node-input-sensor').find('option').remove().end();
 					for (d in data) {
 						$('<option/>',{
@@ -90,7 +90,7 @@
 				var dev = $('#node-input-device').val();
 				if (dev) {
 					var key = dev;
-					$.getJSON('TinkerForge/' + key +"/sensors/" + 25, function(data){
+					$.getJSON('TinkerForge/' + key +"/sensors/" + 2125, function(data){
 						$('#node-input-sensor').find('option').remove().end();
 						for (d in data) {
 							$('<option/>',{
